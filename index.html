@@ -71,6 +71,7 @@
 }
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font-body)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
@@ -254,6 +255,41 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
 .score{font:700 2.6rem/1 var(--font-display)}
 .row{display:flex;flex-wrap:wrap;gap:8px}
 
+/* Parcours TOPIK */
+.pl{white-space:pre-line}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.tile{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tile b{font:700 1.8rem/1.1 var(--font-display);color:var(--accent)}
+.tile span{font-size:.82rem;color:var(--muted)}
+.audiorow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.playbtn{display:inline-flex;align-items:center;gap:8px}
+.playbtn svg{width:18px;height:18px}
+.playbtn:disabled{opacity:.55;cursor:default}
+.trans{font-size:1.25rem;padding:10px 12px;border-radius:10px;background:var(--accent-soft)}
+.passage{white-space:pre-line;font:500 1.2rem/1.7 var(--font-ko);padding:14px 16px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:var(--bg);overflow-wrap:anywhere}
+.qprompt.sm{font-size:clamp(1.25rem,5vw,1.7rem)}
+.qquest{font-weight:600}
+.opt.sel{background:var(--accent-soft);border-color:var(--accent)}
+input.dict{flex:1 1 200px;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:500 1.3rem var(--font-ko)}
+.srs-back{display:flex;flex-direction:column;gap:10px}
+.grades{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.grade{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+.grade span{font-size:.75rem;color:var(--muted)}
+.grade.again{border-color:var(--red);background:var(--red-soft)}
+.grade.good,.grade.easy{border-color:var(--green);background:var(--green-soft)}
+.mlist{display:grid;gap:6px}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) auto;gap:10px;align-items:center;font-size:.9rem}
+.mrow .mlab{min-width:0;overflow-wrap:anywhere}
+.mrow .mval{color:var(--muted);font-size:.8rem;white-space:nowrap}
+@media (max-width:480px){.mrow{grid-template-columns:1fr auto}.mrow .meter{grid-column:1/-1;order:3}}
+.meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.days{display:grid;grid-template-columns:repeat(28,minmax(0,1fr));gap:3px}
+.days i{aspect-ratio:1;border-radius:3px;background:var(--surface-2);border:1px solid var(--line)}
+.days i.on{background:var(--accent);border-color:var(--accent)}
+details{padding:8px 0}
+summary{cursor:pointer;font-weight:600}
+
 .foot{padding-block:28px 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
 .foot ul{display:grid;gap:4px;margin-top:8px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -262,7 +298,7 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
 <header class="masthead gutter">
   <div class="inner">
     <h1>Cahier de coréen<span>한국어</span></h1>
-    <p>Alphabet, grammaire, niveaux de politesse, vocabulaire et quiz. Tout est expliqué pour un francophone, avec lecture vocale de la prononciation.</p>
+    <p>Alphabet, grammaire, vocabulaire, révision quotidienne, exercices d’écoute et de lecture, examen blanc. Un parcours pour préparer le TOPIK I, expliqué pour un francophone, avec lecture vocale.</p>
     <div class="voicebar" id="voicebar"><span class="vlab">Lecture vocale</span><div class="seg" role="group" aria-label="Vitesse de lecture"><button type="button" id="rate-slow" aria-pressed="true">Lente</button><button type="button" id="rate-norm" aria-pressed="false">Normale</button></div><div class="vwrap" id="voice-wrap" hidden><label class="vlab" for="voice-sel">Voix</label><select id="voice-sel"></select></div></div>
     <p class="note small" id="voice-note" hidden></p>
   </div>
@@ -274,6 +310,10 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
     <a class="tab" href="#grammaire" data-v="grammaire">Grammaire</a>
     <a class="tab" href="#politesse" data-v="politesse">Politesse</a>
     <a class="tab" href="#vocabulaire" data-v="vocabulaire">Vocabulaire</a>
+    <a class="tab" href="#reviser" data-v="reviser">Réviser</a>
+    <a class="tab" href="#pratique" data-v="pratique">S’entraîner</a>
+    <a class="tab" href="#examen" data-v="examen">Examen</a>
+    <a class="tab" href="#progres" data-v="progres">Progrès</a>
     <a class="tab" href="#quiz" data-v="quiz">Quiz</a>
   </nav></div>
 </div>
@@ -453,6 +493,13 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
       </tbody>
     </table></div>
   </section>
+  <section class="sec">
+    <p class="eyebrow">Programme TOPIK I</p>
+    <h2>Fiches de grammaire</h2>
+    <p class="def"><b>Terminaison</b> : partie finale d’un verbe ou d’un adjectif qui porte l’information de grammaire (politesse, temps, liaison entre phrases). <b>Radical</b> : le verbe sans sa terminaison -다 (먹다 donne le radical 먹).</p>
+    <p class="muted small">Chaque fiche donne la règle puis quatre exemples écoutables.</p>
+    <div class="fiches" id="fiches-box"></div>
+  </section>
 </div>
 
 <!-- ============ POLITESSE ============ -->
@@ -513,6 +560,45 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
   </section>
 </div>
 
+<!-- ============ RÉVISER ============ -->
+<div class="view" id="v-reviser" hidden>
+  <section class="sec">
+    <p class="eyebrow">Mémoriser</p>
+    <h2>Réviser chaque jour</h2>
+    <p class="def"><b>Répétition espacée</b> : méthode qui repose sur le fait qu’on retient mieux en revoyant un mot juste avant de l’oublier. Plus tu réussis, plus l’intervalle s’allonge. Ici : système de boîtes de Leitner (une « boîte » = un palier d’intervalle).</p>
+    <div id="srs-box"></div>
+  </section>
+</div>
+
+<!-- ============ S'ENTRAÎNER ============ -->
+<div class="view" id="v-pratique" hidden>
+  <section class="sec">
+    <p class="eyebrow">Compétences du TOPIK I</p>
+    <h2>S’entraîner</h2>
+    <p class="def"><b>TOPIK</b> (Test of Proficiency in Korean) : examen officiel de coréen. Le <b>TOPIK I</b> couvre les niveaux 1 et 2 et comporte deux épreuves : compréhension orale et compréhension écrite.</p>
+    <div id="prat-box"></div>
+  </section>
+</div>
+
+<!-- ============ EXAMEN ============ -->
+<div class="view" id="v-examen" hidden>
+  <section class="sec">
+    <p class="eyebrow">Conditions réelles</p>
+    <h2>Examen blanc TOPIK I</h2>
+    <div id="exam-box"></div>
+  </section>
+</div>
+
+<!-- ============ PROGRÈS ============ -->
+<div class="view" id="v-progres" hidden>
+  <section class="sec">
+    <p class="eyebrow">Suivi</p>
+    <h2>Ta progression</h2>
+    <p class="muted small">Tout est enregistré sur cet appareil uniquement.</p>
+  </section>
+  <div id="prog-box" class="view"></div>
+</div>
+
 <!-- ============ QUIZ ============ -->
 <div class="view" id="v-quiz" hidden>
   <section class="sec">
@@ -525,7 +611,7 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
 </div></main>
 
 <footer class="foot gutter"><div class="inner">
-  <p>Contenu rédigé pour ce cahier, niveau débutant. Pour aller plus loin :</p>
+  <p>Contenu rédigé pour ce cahier, niveau débutant : vocabulaire, fiches et questions ne viennent pas des listes ou des sujets officiels du TOPIK. Pour te préparer vraiment, utilise aussi les annales sur topik.go.kr. Pour aller plus loin :</p>
   <ul>
     <li><a href="https://cours-et-fiches.com/langues/coreen/" target="_blank" rel="noopener">cours-et-fiches.com</a> : fiches de vocabulaire par thème, en français</li>
     <li><a href="https://cours-et-fiches.com/langues/coreen/alphabet-coreen-hangeul/" target="_blank" rel="noopener">Guide complet du hangeul</a> sur cours-et-fiches.com</li>
@@ -546,10 +632,10 @@ function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(M
 
 /* ---------- Stockage (confort par visiteur) ---------- */
 var KEY='cahier-coreen-v1';
-var store={known:{},best:{}};
+var store={known:{},best:{},srs:{},wrong:{},days:[],exams:[],newToday:{d:0,n:0}};
 try{
   var raw=localStorage.getItem(KEY);
-  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){store.known=p.known||{};store.best=p.best||{};if(p.rate==='norm')store.rate='norm';if(typeof p.voice==='string')store.voice=p.voice;}}
+  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){store.known=p.known||{};store.best=p.best||{};store.srs=p.srs||{};store.wrong=p.wrong||{};store.days=Array.isArray(p.days)?p.days:[];store.exams=Array.isArray(p.exams)?p.exams:[];if(p.newToday&&typeof p.newToday==='object')store.newToday=p.newToday;if(p.rate==='norm')store.rate='norm';if(typeof p.voice==='string')store.voice=p.voice;}}
 }catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 
@@ -568,8 +654,12 @@ function voiceScore(v){
 function fillVoiceSelect(){
   var wrap=$('#voice-wrap'),sel=$('#voice-sel');if(!wrap||!sel)return;
   sel.textContent='';
-  TTS.list.forEach(function(v){var o=el('option',null,v.name);o.value=v.name;sel.appendChild(o);});
-  if(TTS.voice)sel.value=TTS.voice.name;
+  var a=el('option',null,'Automatique'+(TTS.list[0]?' ('+TTS.list[0].name+')':''));a.value='';sel.appendChild(a);
+  TTS.list.forEach(function(v){
+    var o=el('option',null,v.name+(v.localService?'':' (en ligne)'));
+    o.value=v.voiceURI||v.name;sel.appendChild(o);
+  });
+  sel.value=(TTS.voice&&store.voice)?store.voice:'';
   wrap.hidden=TTS.list.length<2;
 }
 function pickVoice(){
@@ -579,7 +669,7 @@ function pickVoice(){
   ko.sort(function(a,b){return voiceScore(b)-voiceScore(a);});
   TTS.list=ko;
   var chosen=null;
-  if(store.voice){for(var i=0;i<ko.length;i++){if(ko[i].name===store.voice){chosen=ko[i];break;}}}
+  if(store.voice){for(var i=0;i<ko.length;i++){if((ko[i].voiceURI||ko[i].name)===store.voice){chosen=ko[i];break;}}}
   TTS.voice=chosen||ko[0]||null;
   fillVoiceSelect();
   paintVoiceNote();
@@ -600,12 +690,12 @@ function initVoice(){
   $('#rate-slow').addEventListener('click',function(){store.rate='slow';save();paintRate();});
   $('#rate-norm').addEventListener('click',function(){store.rate='norm';save();paintRate();});
   paintRate();
-  $('#voice-sel').addEventListener('change',function(){store.voice=this.value;save();pickVoice();speak('안녕하세요',null);});
+  $('#voice-sel').addEventListener('change',function(){if(this.value)store.voice=this.value;else delete store.voice;save();pickVoice();speak('안녕하세요',null);});
   try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
   pickVoice();
   setTimeout(function(){TTS.late=true;paintVoiceNote();},1500);
 }
-function speak(text,btn){
+function speak(text,btn,cb){
   if(!TTS.ok)return;
   var t=String(text).replace(/[·~]/g,',').replace(/\s+/g,' ').trim();
   if(!t)return;
@@ -616,7 +706,7 @@ function speak(text,btn){
     var u=new SpeechSynthesisUtterance(t);
     u.lang='ko-KR';u.rate=ttsRate();
     if(TTS.voice)u.voice=TTS.voice;
-    var done=function(){if(id!==TTS.id)return;if(btn)btn.classList.remove('speaking');TTS.btn=null;};
+    var done=function(){if(id!==TTS.id)return;if(btn)btn.classList.remove('speaking');TTS.btn=null;if(cb)cb();};
     u.onend=done;u.onerror=done;
     if(btn){btn.classList.add('speaking');TTS.btn=btn;}
     window.speechSynthesis.speak(u);
@@ -978,6 +1068,13 @@ var THEMES=[
   ['Amusant, intéressant','재미있다','jaemiitda'],['Fatigué','피곤하다','pigonhada']
  ]}
 ];
+var NEW_THEMES=[{"id":"aliments","title":"Aliments et plats","intro":"Les mots de la cuisine coréenne et des courses. Pour commander, ajoute 주세요 après le nom.","raw":[["Riz (cru)","쌀","ssal"],["Soupe","국","guk"],["Ragoût","찌개","jjigae"],["Accompagnements","반찬","banchan"],["Bibimbap","비빔밥","bibimbap"],["Bulgogi (bœuf mariné)","불고기","bulgogi"],["Ramen","라면","ramyeon"],["Gimbap","김밥","gimbap"],["Gâteau de riz","떡","tteok"],["Œuf","달걀","dalgyal"],["Bœuf","소고기","sogogi"],["Porc","돼지고기","dwaejigogi"],["Poulet (viande)","닭고기","dakgogi"],["Tofu","두부","dubu"],["Pomme de terre","감자","gamja"],["Oignon","양파","yangpa"],["Carotte","당근","danggeun"],["Concombre","오이","oi"],["Chou chinois","배추","baechu"],["Piment","고추","gochu"],["Ail","마늘","maneul"],["Champignon","버섯","beoseot"],["Fraise","딸기","ttalgi"],["Raisin","포도","podo"],["Pastèque","수박","subak"],["Mandarine","귤","gyul"],["Orange","오렌지","orenji"],["Pêche","복숭아","boksunga"],["Banane","바나나","banana"],["Tomate","토마토","tomato"],["Gâteau","케이크","keikeu"],["Biscuit","과자","gwaja"],["Bonbon","사탕","satang"],["Chocolat","초콜릿","chokollit"],["Glace (crème glacée)","아이스크림","aiseukeurim"],["Jus","주스","juseu"],["Alcool","술","sul"],["Sel","소금","sogeum"],["Sucre","설탕","seoltang"],["Sauce soja","간장","ganjang"],["Huile","기름","gireum"],["Salade","샐러드","saelleodeu"],["Sandwich","샌드위치","saendeuwichi"],["Pizza","피자","pija"],["Hamburger","햄버거","haembeogeo"],["Poulet frit","치킨","chikin"],["Glaçons","얼음","eoreum"]]},{"id":"corps","title":"Corps et santé","intro":"Les parties du corps et les mots utiles chez le médecin. 아파요 signifie « j’ai mal ».","raw":[["Corps","몸","mom"],["Tête","머리","meori"],["Visage","얼굴","eolgul"],["Œil, neige","눈","nun"],["Nez","코","ko"],["Bouche","입","ip"],["Oreille","귀","gwi"],["Dent","치아","chia"],["Cou, gorge","목","mok"],["Épaule","어깨","eokkae"],["Main","손","son"],["Doigt","손가락","songarak"],["Poitrine","가슴","gaseum"],["Ventre","배","bae"],["Dos","등","deung"],["Jambe","다리","dari"],["Pied","발","bal"],["Genou","무릎","mureup"],["Peau","피부","pibu"],["Cheveux","머리카락","meorikarak"],["Santé","건강","geongang"],["Maladie","병","byeong"],["Rhume","감기","gamgi"],["Mal de tête","두통","dutong"],["Médicament","약","yak"],["Pharmacie","약국","yakguk"],["Hôpital","병원","byeongwon"],["Médecin","의사","uisa"],["Infirmier, infirmière","간호사","ganhosa"],["Toux","기침","gichim"],["Sang","피","pi"],["Avoir mal","아프다","apeuda"]]},{"id":"maison","title":"Maison et objets","intro":"Pièces, meubles et objets du quotidien.","raw":[["Maison, chez soi","집","jip"],["Chambre, pièce","방","bang"],["Salon","거실","geosil"],["Cuisine (pièce)","부엌","bueok"],["Salle de bain","욕실","yoksil"],["Porte","문","mun"],["Fenêtre","창문","changmun"],["Lit","침대","chimdae"],["Chaise","의자","uija"],["Bureau (meuble)","책상","chaeksang"],["Table (de repas)","식탁","siktak"],["Livre","책","chaek"],["Cahier","공책","gongchaek"],["Crayon","연필","yeonpil"],["Stylo à bille","볼펜","bolpen"],["Sac","가방","gabang"],["Parapluie","우산","usan"],["Clé","열쇠","yeolsoe"],["Montre, horloge","시계","sigye"],["Miroir","거울","geoul"],["Téléphone","전화","jeonhwa"],["Téléphone portable","휴대폰","hyudaepon"],["Ordinateur","컴퓨터","keompyuteo"],["Télévision","텔레비전","tellebijeon"],["Réfrigérateur","냉장고","naengjanggo"],["Climatiseur","에어컨","eeokeon"],["Lumière, feu","불","bul"],["Couette","이불","ibul"],["Oreiller","베개","begae"],["Serviette de toilette","수건","sugeon"],["Savon","비누","binu"],["Brosse à dents","칫솔","chitsol"],["Papier toilette","휴지","hyuji"],["Verre, tasse","컵","keop"],["Assiette","접시","jeopsi"],["Cuillère","숟가락","sutgarak"],["Baguettes","젓가락","jeotgarak"],["Couteau","칼","kal"],["Photo","사진","sajin"],["Journal","신문","sinmun"],["Lettre (courrier)","편지","pyeonji"],["Dessin, tableau","그림","geurim"],["Chanson","노래","norae"]]},{"id":"vetements","title":"Vêtements et couleurs","intro":"Pour décrire ce qu’on porte. Les couleurs se terminent souvent par 색 (« couleur »).","raw":[["Vêtement","옷","ot"],["Pantalon","바지","baji"],["Jupe","치마","chima"],["Chemise","셔츠","syeocheu"],["T-shirt","티셔츠","tisyeocheu"],["Manteau","코트","koteu"],["Chapeau","모자","moja"],["Chaussures","신발","sinbal"],["Chaussettes","양말","yangmal"],["Lunettes","안경","angyeong"],["Gants","장갑","janggap"],["Écharpe","목도리","mokdori"],["Portefeuille","지갑","jigap"],["Bague","반지","banji"],["Collier","목걸이","mokgeori"],["Hanbok (vêtement traditionnel)","한복","hanbok"],["Couleur","색","saek"],["Rouge","빨간색","ppalgansaek"],["Bleu","파란색","paransaek"],["Jaune","노란색","noransaek"],["Vert","초록색","choroksaek"],["Noir","검은색","geomeunsaek"],["Blanc","하얀색","hayansaek"],["Violet","보라색","borasaek"],["Rose","분홍색","bunhongsaek"],["Orange (couleur)","주황색","juhwangsaek"],["Marron","갈색","galsaek"],["Gris","회색","hoesaek"]]},{"id":"nature","title":"Nature, météo et animaux","intro":"La météo se dit 날씨. Les quatre saisons : 봄, 여름, 가을, 겨울.","raw":[["Météo","날씨","nalssi"],["Ciel","하늘","haneul"],["Soleil","해","hae"],["Lune","달","dal"],["Étoile","별","byeol"],["Nuage","구름","gureum"],["Pluie","비","bi"],["Vent","바람","baram"],["Brouillard","안개","angae"],["Typhon","태풍","taepung"],["Printemps","봄","bom"],["Été","여름","yeoreum"],["Automne","가을","gaeul"],["Hiver","겨울","gyeoul"],["Saison","계절","gyejeol"],["Montagne","산","san"],["Mer","바다","bada"],["Fleuve","강","gang"],["Lac","호수","hosu"],["Île","섬","seom"],["Arbre","나무","namu"],["Fleur","꽃","kkot"],["Herbe","풀","pul"],["Forêt","숲","sup"],["Parc","공원","gongwon"],["Terre, sol","땅","ttang"],["Pierre","돌","dol"],["Animal","동물","dongmul"],["Chien","개","gae"],["Chat","고양이","goyangi"],["Oiseau","새","sae"],["Poisson (vivant)","물고기","mulgogi"],["Vache","소","so"],["Cochon","돼지","dwaeji"],["Poule","닭","dak"],["Lapin","토끼","tokki"],["Tigre","호랑이","horangi"],["Ours","곰","gom"],["Singe","원숭이","wonsungi"],["Insecte","벌레","beolle"]]},{"id":"villes","title":"Lieux en ville","intro":"Pour demander son chemin et dire où l’on va. Le lieu se place avant 에 가요.","raw":[["Ville","도시","dosi"],["Campagne","시골","sigol"],["Village, quartier","마을","maeul"],["Rue","거리","geori"],["Chemin, route","길","gil"],["Bâtiment","건물","geonmul"],["Appartement","아파트","apateu"],["École","학교","hakgyo"],["Université","대학교","daehakgyo"],["Bibliothèque","도서관","doseogwan"],["Banque","은행","eunhaeng"],["Poste","우체국","ucheguk"],["Commissariat","경찰서","gyeongchalseo"],["Marché","시장","sijang"],["Boutique","가게","gage"],["Grand magasin","백화점","baekwajeom"],["Supermarché","슈퍼마켓","syupeomaket"],["Supérette ouverte tard","편의점","pyeonuijeom"],["Restaurant","식당","sikdang"],["Café (lieu)","카페","kape"],["Boulangerie","빵집","ppangjip"],["Librairie","서점","seojeom"],["Fleuriste","꽃집","kkotjip"],["Cinéma","영화관","yeonghwagwan"],["Musée","박물관","bangmulgwan"],["Arrêt (de bus)","정류장","jeongnyujang"],["Entreprise","회사","hoesa"],["Bureau (lieu de travail)","사무실","samusil"],["Église","교회","gyohoe"],["Temple bouddhiste","절","jeol"],["Aire de jeux","놀이터","noriteo"],["Piscine","수영장","suyeongjang"],["Mairie","시청","sicheong"]]},{"id":"transport","title":"Transports","intro":"Les moyens de transport et les mots du voyage.","raw":[["Transports, circulation","교통","gyotong"],["Voiture","자동차","jadongcha"],["Train","기차","gicha"],["Avion","비행기","bihaenggi"],["Vélo","자전거","jajeongeo"],["Moto","오토바이","otobai"],["Billet, ticket","표","pyo"],["Feu de circulation","신호등","sinhodeung"],["Passage piéton","횡단보도","hoengdanbodo"],["Parking","주차장","juchajang"],["Autoroute","고속도로","gosokdoro"],["Départ","출발","chulbal"],["Arrivée","도착","dochak"],["Correspondance","환승","hwanseung"],["Conduite","운전","unjeon"],["Chauffeur","운전사","unjeonsa"]]},{"id":"ecole","title":"École et travail","intro":"Études, métiers et vie de bureau.","raw":[["Étudiant(e)","학생","haksaeng"],["Professeur (respectueux)","선생님","seonsaengnim"],["Professeur d’université","교수","gyosu"],["Classe","반","ban"],["Cours","수업","sueop"],["Devoirs","숙제","sukje"],["Examen","시험","siheom"],["Question","질문","jilmun"],["Réponse","대답","daedap"],["Étude","공부","gongbu"],["Salle de classe","교실","gyosil"],["Tableau noir","칠판","chilpan"],["Dictionnaire","사전","sajeon"],["Manuel scolaire","교과서","gyogwaseo"],["Nom","이름","ireum"],["Âge","나이","nai"],["Métier","직업","jigeop"],["Employé(e) de bureau","회사원","hoesawon"],["Lieu de travail","직장","jikjang"],["Patron","사장님","sajangnim"],["Collègue","동료","dongnyo"],["Réunion","회의","hoeui"],["Aller au travail","출근","chulgeun"],["Quitter le travail","퇴근","toegeun"],["Congé","휴가","hyuga"],["Jour férié","휴일","hyuil"],["Week-end","주말","jumal"],["Vacances scolaires","방학","banghak"],["Remise de diplôme","졸업","joreop"],["Entrée à l’école","입학","ipak"],["Coréen (langue)","한국어","hangugeo"],["Français (langue)","프랑스어","peurangseueo"],["Anglais (langue)","영어","yeongeo"],["Étranger","외국인","oegugin"],["Pays étranger","외국","oeguk"],["Problème","문제","munje"]]},{"id":"achats","title":"Achats et argent","intro":"Au magasin : demander le prix, payer, échanger.","raw":[["Argent","돈","don"],["Won (monnaie)","원","won"],["Prix","가격","gagyeok"],["Prix (courant)","값","gap"],["Paiement, calcul","계산","gyesan"],["Carte (bancaire)","카드","kadeu"],["Espèces","현금","hyeongeum"],["Reçu","영수증","yeongsujeung"],["Monnaie rendue","거스름돈","geoseureumdon"],["Réduction","할인","harin"],["Soldes","세일","seil"],["Cadeau","선물","seonmul"],["Objet, marchandise","물건","mulgeon"],["Shopping","쇼핑","syoping"],["Client","손님","sonnim"],["Propriétaire, patron de boutique","주인","juin"],["Vendeur","점원","jeomwon"],["Vendre","팔다","palda"],["Changer, échanger","바꾸다","bakkuda"],["Remboursement","환불","hwanbul"],["Emballage","포장","pojang"],["Sac en plastique, enveloppe","봉투","bongtu"],["Taille (dimension)","크기","keugi"],["Taille (vêtement)","사이즈","saijeu"],["Poids","무게","muge"]]},{"id":"loisirs","title":"Loisirs et sport","intro":"Parler de ce qu’on aime faire. 취미가 뭐예요 ? signifie « quel est ton loisir ? ».","raw":[["Loisir","취미","chwimi"],["Sport, exercice","운동","undong"],["Football","축구","chukgu"],["Baseball","야구","yagu"],["Basket-ball","농구","nonggu"],["Tennis","테니스","teniseu"],["Natation","수영","suyeong"],["Randonnée en montagne","등산","deungsan"],["Promenade","산책","sanchaek"],["Voyage","여행","yeohaeng"],["Film","영화","yeonghwa"],["Musique","음악","eumak"],["Danse","춤","chum"],["Jeu","게임","geim"],["Lecture (loisir)","독서","dokseo"],["Cuisine (l’art de cuisiner)","요리","yori"],["Série télévisée","드라마","deurama"],["Concert","콘서트","konseoteu"],["Baskets","운동화","undonghwa"],["Joueur","선수","seonsu"],["Match","경기","gyeonggi"],["Équipe","팀","tim"],["Repos","휴식","hyusik"],["Pêche (loisir)","낚시","naksi"],["Camping","캠핑","kaemping"],["Piano","피아노","piano"],["Guitare","기타","gita"]]},{"id":"compteurs","title":"Compteurs et nombres utiles","intro":"Un nombre natif se place devant un compteur : 두 명 (deux personnes), 세 잔 (trois verres). Les heures utilisent les nombres natifs, les minutes les nombres sino-coréens.","raw":[["Un objet","한 개","han gae"],["Deux objets","두 개","du gae"],["Trois objets","세 개","se gae"],["Une personne","한 명","han myeong"],["Deux personnes","두 명","du myeong"],["Trois personnes","세 명","se myeong"],["Un animal","한 마리","han mari"],["Deux animaux","두 마리","du mari"],["Un verre (boisson)","한 잔","han jan"],["Deux verres","두 잔","du jan"],["Une bouteille","한 병","han byeong"],["Deux bouteilles","두 병","du byeong"],["Un livre","한 권","han gwon"],["Deux livres","두 권","du gwon"],["Un billet, une feuille","한 장","han jang"],["Deux billets, deux feuilles","두 장","du jang"],["Un véhicule","한 대","han dae"],["Deux véhicules","두 대","du dae"],["Une fois","한 번","han beon"],["Deux fois","두 번","du beon"],["Un an (âge)","한 살","han sal"],["Vingt ans (âge)","스무 살","seumu sal"],["Trente ans (âge)","서른 살","seoreun sal"],["Une heure (horloge)","한 시","han si"],["Deux heures (horloge)","두 시","du si"],["Trois heures (horloge)","세 시","se si"],["Quatre heures (horloge)","네 시","ne si"],["Cinq heures (horloge)","다섯 시","daseot si"],["Douze heures (horloge)","열두 시","yeoldu si"],["Une heure (durée)","한 시간","han sigan"],["Deux heures (durée)","두 시간","du sigan"],["Cinq minutes","오 분","o bun"],["Dix minutes","십 분","sip bun"],["Trente minutes, et demie","삼십 분","samsip bun"],["Combien d’objets ?","몇 개","myeot gae"],["Combien de personnes ?","몇 명","myeot myeong"],["Quelle heure ?","몇 시","myeot si"],["Quel âge ?","몇 살","myeot sal"],["Combien de fois ?","몇 번","myeot beon"]]},{"id":"nombres2","title":"Nombres (suite)","intro":"Les dizaines existent dans les deux séries. Le zéro se dit 영, et 공 pour les numéros de téléphone.","raw":[["Zéro","영","yeong"],["Zéro (numéros de téléphone)","공","gong"],["Vingt (sino-coréen)","이십","isip"],["Trente (sino-coréen)","삼십","samsip"],["Quarante (sino-coréen)","사십","sasip"],["Cinquante (sino-coréen)","오십","osip"],["Soixante (sino-coréen)","육십","yuksip"],["Soixante-dix (sino-coréen)","칠십","chilsip"],["Quatre-vingts (sino-coréen)","팔십","palsip"],["Quatre-vingt-dix (sino-coréen)","구십","gusip"],["Vingt (natif)","스물","seumul"],["Trente (natif)","서른","seoreun"],["Quarante (natif)","마흔","maheun"],["Cinquante (natif)","쉰","swin"],["Soixante (natif)","예순","yesun"],["Soixante-dix (natif)","일흔","ilheun"],["Quatre-vingts (natif)","여든","yeodeun"],["Quatre-vingt-dix (natif)","아흔","aheun"],["Deux mille","이천","icheon"],["Cinq mille","오천","ocheon"],["Cent mille","십만","simman"],["Un million","백만","baengman"],["Premier","첫째","cheotjjae"],["Deuxième","둘째","duljjae"]]},{"id":"dates","title":"Mois, dates et moments","intro":"Les mois sont des nombres sino-coréens + 월. Deux exceptions à retenir : juin se dit 유월 et octobre 시월.","raw":[["Janvier","일월","irwol"],["Février","이월","iwol"],["Mars","삼월","samwol"],["Avril","사월","sawol"],["Mai","오월","owol"],["Juin","유월","yuwol"],["Juillet","칠월","chirwol"],["Août","팔월","parwol"],["Septembre","구월","guwol"],["Octobre","시월","siwol"],["Novembre","십일월","sibirwol"],["Décembre","십이월","sibiwol"],["Un jour","하루","haru"],["Deux jours","이틀","iteul"],["Trois jours","사흘","saheul"],["Après-demain","모레","more"],["Avant-hier","그저께","geujeokke"],["Cette année","올해","olhae"],["L’année dernière","작년","jangnyeon"],["L’année prochaine","내년","naenyeon"],["Cette semaine","이번 주","ibeon ju"],["La semaine prochaine","다음 주","daeum ju"],["La semaine dernière","지난주","jinanju"],["Ce mois-ci","이번 달","ibeon dal"],["Le mois prochain","다음 달","daeum dal"],["Le mois dernier","지난달","jinandal"],["Chaque jour","매일","maeil"],["Chaque semaine","매주","maeju"],["Chaque année","매년","maenyeon"],["Jour de la semaine","요일","yoil"],["Anniversaire","생일","saengil"],["Date","날짜","naljja"],["Temps, heure (durée)","시간","sigan"],["Minute","분","bun"],["Seconde","초","cho"],["Matin (AM)","오전","ojeon"],["Après-midi (PM)","오후","ohu"],["Déjeuner, midi","점심","jeomsim"],["Journée (en plein jour)","낮","nat"],["Aube, petit matin","새벽","saebyeok"],["Toute la journée","하루 종일","haru jongil"]]},{"id":"famille2","title":"Famille élargie et personnes","intro":"Compléter les mots de la famille et désigner les gens autour de soi.","raw":[["Grand-père","할아버지","harabeoji"],["Grand-mère","할머니","halmeoni"],["Parents","부모님","bumonim"],["Frères","형제","hyeongje"],["Sœurs","자매","jamae"],["Homme","남자","namja"],["Femme","여자","yeoja"],["Petit ami","남자친구","namjachingu"],["Petite amie","여자친구","yeojachingu"],["Bébé","아기","agi"],["Adulte","어른","eoreun"],["Enfant (jeune)","어린이","eorini"],["Personne","사람","saram"],["Gens","사람들","saramdeul"],["Voisin","이웃","iut"],["Oncle (frère du père)","삼촌","samchon"],["Tante (côté maternel)","이모","imo"],["Tante (côté paternel)","고모","gomo"],["Cousin(e)","사촌","sachon"],["Neveu, nièce","조카","joka"],["Monsieur (adulte, familier)","아저씨","ajeossi"],["Madame (adulte, familier)","아주머니","ajumeoni"]]},{"id":"positions","title":"Positions et directions","intro":"Ces mots se placent après le nom : 책상 위 (sur le bureau), 학교 앞 (devant l’école).","raw":[["Dessus, haut","위","wi"],["Dessous, bas","아래","arae"],["Devant, avant","앞","ap"],["Derrière, après","뒤","dwi"],["À côté","옆","yeop"],["Intérieur, dedans","안","an"],["Extérieur, dehors","밖","bak"],["Entre","사이","sai"],["Milieu, centre","가운데","gaunde"],["Milieu (intermédiaire)","중간","junggan"],["Est","동쪽","dongjjok"],["Ouest","서쪽","seojjok"],["Sud","남쪽","namjjok"],["Nord","북쪽","bukjjok"],["Environs, à proximité","근처","geuncheo"],["En face (de l’autre côté)","건너편","geonneopyeon"],["Coin (de rue)","모퉁이","motungi"],["De ce côté","이쪽","ijjok"],["De l’autre côté","저쪽","jeojjok"],["Fin, bout","끝","kkeut"]]},{"id":"emotions","title":"Émotions et sensations","intro":"Beaucoup d’états se disent avec un adjectif en 다 : 기뻐요 (je suis content), 슬퍼요 (je suis triste).","raw":[["Humeur","기분","gibun"],["Cœur, esprit","마음","maeum"],["Amour","사랑","sarang"],["Bonheur","행복","haengbok"],["Être content","기쁘다","gippeuda"],["Être triste","슬프다","seulpeuda"],["Se fâcher","화나다","hwanada"],["Faire peur, avoir peur","무섭다","museopda"],["Être surpris","놀라다","nollada"],["Inquiétude","걱정","geokjeong"],["Se sentir seul","외롭다","oeropda"],["S’ennuyer","심심하다","simsimhada"],["Avoir sommeil","졸리다","jollida"],["Avoir faim","배고프다","baegopeuda"],["Avoir soif","목마르다","mongmareuda"],["Avoir honte, être timide","부끄럽다","bukkeureopda"],["S’amuser, être joyeux","즐겁다","jeulgeopda"],["Détester","싫어하다","sireohada"],["Aimer (d’amour)","사랑하다","saranghada"],["Manquer, avoir envie de voir","보고 싶다","bogo sipda"],["Être fatigué (physiquement)","힘들다","himdeulda"],["Être nerveux","긴장하다","ginjanghada"]]},{"id":"verbes2","title":"Verbes du quotidien","intro":"Formes du dictionnaire (en 다). Conjugue-les avec les règles de la section Grammaire.","raw":[["S’asseoir","앉다","anda"],["Se tenir debout","서다","seoda"],["Se lever (du lit)","일어나다","ireonada"],["S’allonger","눕다","nupda"],["Marcher","걷다","geotda"],["Courir","뛰다","ttwida"],["Monter dans (un transport)","타다","tada"],["Descendre (d’un transport)","내리다","naerida"],["Entrer","들어가다","deureogada"],["Sortir (aller dehors)","나가다","nagada"],["Sortir (venir dehors)","나오다","naoda"],["Monter (aller en haut)","올라가다","ollagada"],["Descendre (aller en bas)","내려가다","naeryeogada"],["Ouvrir","열다","yeolda"],["Fermer","닫다","datda"],["Allumer","켜다","kyeoda"],["Éteindre","끄다","kkeuda"],["Mettre (vêtement)","입다","ipda"],["Enlever (vêtement)","벗다","beotda"],["Mettre (chaussures)","신다","sinda"],["Laver","씻다","ssitda"],["Essuyer, frotter, se brosser","닦다","dakda"],["Nettoyer, faire le ménage","청소하다","cheongsohada"],["Cuisiner","요리하다","yorihada"],["Fabriquer, faire","만들다","mandeulda"],["Enseigner","가르치다","gareuchida"],["Demander (poser une question)","묻다","mutda"],["Répondre","대답하다","daedapada"],["Appeler (quelqu’un)","부르다","bureuda"],["Téléphoner","전화하다","jeonhwahada"],["Attendre","기다리다","gidarida"],["Chercher","찾다","chatda"],["Jouer, s’amuser","놀다","nolda"],["Se reposer","쉬다","swida"],["Faire du sport","운동하다","undonghada"],["Voyager","여행하다","yeohaenghada"],["Rire","웃다","utda"],["Pleurer","울다","ulda"],["Penser","생각하다","saenggakada"],["Se souvenir","기억하다","gieokada"],["Oublier","잊다","itda"],["Commencer","시작하다","sijakada"],["Finir (se terminer)","끝나다","kkeunnada"],["Aider","도와주다","dowajuda"],["Emprunter","빌리다","billida"],["Prêter","빌려주다","billyeojuda"],["Envoyer","보내다","bonaeda"],["Recevoir","받다","batda"],["Apporter","가져오다","gajyeooda"],["Poser, mettre","놓다","nota"],["Mettre dedans","넣다","neota"],["Utiliser","사용하다","sayonghada"],["Dessiner","그리다","geurida"],["Chanter","노래하다","noraehada"],["Danser","춤추다","chumchuda"],["Nager","수영하다","suyeonghada"],["Naître","태어나다","taeeonada"],["Se marier","결혼하다","gyeolhonhada"],["Déménager","이사하다","isahada"],["Partir (départ)","출발하다","chulbalhada"],["Arriver","도착하다","dochakada"],["Réserver","예약하다","yeyakada"],["Commander","주문하다","jumunhada"],["Payer","지불하다","jibulhada"],["Changer (de transport)","갈아타다","garatada"],["Rentrer (retourner)","돌아가다","doragada"],["Revenir","돌아오다","doraoda"],["Quitter, partir","떠나다","tteonada"],["Attraper","잡다","japda"],["Prendre (une photo)","찍다","jjikda"],["Se rencontrer, se voir","보이다","boida"],["Montrer","보여주다","boyeojuda"],["Prendre (du temps), durer","걸리다","geollida"]]},{"id":"adjectifs2","title":"Adjectifs (suite)","intro":"Les adjectifs se conjuguent comme les verbes : 길다 donne 길어요. Placés devant un nom, ils changent de forme (예쁜 꽃).","raw":[["Long","길다","gilda"],["Court","짧다","jjalda"],["Haut","높다","nopda"],["Bas","낮다","natda"],["Large, spacieux","넓다","neolda"],["Étroit","좁다","jopda"],["Lourd","무겁다","mugeopda"],["Léger","가볍다","gabyeopda"],["Rapide","빠르다","ppareuda"],["Lent","느리다","neurida"],["Loin","멀다","meolda"],["Proche","가깝다","gakkapda"],["Sombre","어둡다","eodupda"],["Clair, lumineux","밝다","bakda"],["Propre","깨끗하다","kkaekkeutada"],["Sale","더럽다","deoreopda"],["Calme","조용하다","joyonghada"],["Bruyant","시끄럽다","sikkeureopda"],["Chaud (agréable, tiède)","따뜻하다","ttatteutada"],["Frais (agréable)","시원하다","siwonhada"],["Brûlant","뜨겁다","tteugeopda"],["Froid (objet, eau)","차갑다","chagapda"],["Sucré","달다","dalda"],["Salé","짜다","jjada"],["Piquant, épicé","맵다","maepda"],["Acide","시다","sida"],["Nouveau","새롭다","saeropda"],["Vieux (objet)","오래되다","oraedoeda"],["Jeune","젊다","jeomda"],["Âgé","늙다","neukda"],["Mignon","귀엽다","gwiyeopda"],["Beau, classe","멋있다","meositda"],["Intelligent","똑똑하다","ttokttokada"],["Gentil, aimable","친절하다","chinjeolhada"],["Célèbre","유명하다","yumyeonghada"],["Important","중요하다","jungyohada"],["Nécessaire","필요하다","piryohada"],["Confortable, facile","편하다","pyeonhada"],["Inconfortable, gênant","불편하다","bulpyeonhada"],["Dangereux","위험하다","wiheomhada"],["Sûr","안전하다","anjeonhada"],["En bonne santé","건강하다","geonganghada"],["Heureux","행복하다","haengbokada"],["Pareil","같다","gatda"],["Différent","다르다","dareuda"]]},{"id":"adverbes","title":"Adverbes et mots de liaison","intro":"Ces petits mots rendent les phrases plus naturelles. L’adverbe se place avant le verbe.","raw":[["Très","아주","aju"],["Très (soutenu)","매우","maeu"],["Trop","너무","neomu"],["Vraiment","정말","jeongmal"],["Vraiment (familier)","진짜","jinjja"],["Un peu","조금","jogeum"],["Beaucoup","많이","mani"],["Plus","더","deo"],["Moins","덜","deol"],["Le plus (très)","가장","gajang"],["Le plus (très), numéro un","제일","jeil"],["Encore (pas encore)","아직","ajik"],["Déjà (ça y est)","이미","imi"],["Déjà (avant l’heure)","벌써","beolsseo"],["Bientôt","곧","got"],["D’abord, avant","먼저","meonjeo"],["Plus tard","나중에","najunge"],["Toujours (tout le temps)","늘","neul"],["Toujours (constamment)","항상","hangsang"],["Souvent","자주","jaju"],["Parfois","가끔","gakkeum"],["D’habitude","보통","botong"],["De nouveau","다시","dasi"],["Encore (en plus)","또","tto"],["Ensemble","같이","gati"],["Ensemble (soutenu)","함께","hamkke"],["Seul","혼자","honja"],["Tous, tout le monde","모두","modu"],["Tout (tous)","다","da"],["Vite","빨리","ppalli"],["Lentement","천천히","cheoncheonhi"],["Avec effort, assidûment","열심히","yeolsimhi"],["Bien","잘","jal"],["Début, première fois","처음","cheoeum"],["Et (puis)","그리고","geurigo"],["Donc, alors","그래서","geuraeseo"],["Mais (soutenu)","그러나","geureona"],["Mais","하지만","hajiman"],["Mais, au fait","그런데","geureonde"],["Alors, dans ce cas","그러면","geureomyeon"],["Parce que (début de phrase)","왜냐하면","waenyahamyeon"]]},{"id":"pronoms","title":"Pronoms, démonstratifs et interrogatifs","intro":"이 (proche de moi), 그 (proche de toi), 저 (loin des deux). Les interrogatifs se placent à la place de la réponse.","raw":[["Moi (poli) ; ce… là-bas","저","jeo"],["Moi (familier)","나","na"],["Toi (familier)","너","neo"],["Vous (rare)","당신","dangsin"],["Nous","우리","uri"],["Nous (humble)","저희","jeohui"],["Lui ; ce… (proche de toi)","그","geu"],["Elle","그녀","geunyeo"],["Ceci","이것","igeot"],["Cela","그것","geugeot"],["Cela (là-bas)","저것","jeogeot"],["Là (près de toi)","거기","geogi"],["Quoi (soutenu)","무엇","mueot"],["Quel (parmi plusieurs)","어느","eoneu"],["Quelle sorte de","어떤","eotteon"],["Quel (genre de)","무슨","museun"],["Qui (sujet)","누가","nuga"],["Ceci (courant)","이거","igeo"],["Cela (courant)","그거","geugeo"],["Cela là-bas (courant)","저거","jeogeo"],["Chose, truc","거","geo"],["M., Mme (après un prénom)","씨","ssi"]]},{"id":"expressions","title":"Expressions utiles","intro":"Phrases toutes faites à connaître par cœur.","raw":[["Enchanté (première rencontre)","처음 뵙겠습니다","cheoeum boepgetseumnida"],["Je compte sur vous","잘 부탁드립니다","jal butakdeurimnida"],["Bienvenue (dans un magasin)","어서 오세요","eoseo oseyo"],["Un instant","잠깐만요","jamkkanmanyo"],["Excusez-moi (pour appeler)","여기요","yeogiyo"],["Au revoir (familier, poli)","잘 가요","jal gayo"],["Courage, bon travail","수고하세요","sugohaseyo"],["Félicitations","축하해요","chukahaeyo"],["Joyeux anniversaire","생일 축하해요","saengil chukahaeyo"],["Bonne année","새해 복 많이 받으세요","saehae bok mani badeuseyo"],["Bon appétit (à quelqu’un)","맛있게 드세요","masitge deuseyo"],["Merci pour le repas","잘 먹었습니다","jal meogeotseumnida"],["J’ai compris","알겠어요","algesseoyo"],["Je ne sais pas","몰라요","mollayo"],["Vraiment ?","그래요?","geuraeyo"],["C’est vrai, exact","맞아요","majayo"],["D’accord, c’est bien","좋아요","joayo"],["Je n’aime pas, non merci","싫어요","sireoyo"],["Allons-y ensemble","같이 가요","gati gayo"],["C’est où ?","어디예요?","eodiyeyo"],["Donnez-moi ceci","이거 주세요","igeo juseyo"],["Encore, s’il vous plaît","더 주세요","deo juseyo"],["Emballez-le, s’il vous plaît","포장해 주세요","pojanghae juseyo"],["Aidez-moi","도와주세요","dowajuseyo"],["Je suis perdu","길을 잃었어요","gireul ireosseoyo"],["Répétez une fois de plus","한 번 더 말해 주세요","han beon deo malhae juseyo"],["Qu’est-ce que c’est ?","이게 뭐예요?","ige mwoyeyo"],["À la prochaine","다음에 또 만나요","daeume tto mannayo"],["Faites attention","조심하세요","josimhaseyo"],["Désolé d’être en retard","늦어서 죄송합니다","neujeoseo joesonghamnida"],["Prenez une photo, s’il vous plaît","사진 찍어 주세요","sajin jjigeo juseyo"],["Quel est votre numéro de téléphone ?","전화번호가 뭐예요?","jeonhwabeonhoga mwoyeyo"],["Quel âge avez-vous ?","몇 살이에요?","myeot sarieyo"],["D’où venez-vous ?","어디에서 왔어요?","eodieseo wasseoyo"],["Je viens en Corée pour la première fois","한국에 처음 왔어요","hanguge cheoeum wasseoyo"],["Vous parlez anglais ?","영어 할 수 있어요?","yeongeo hal su isseoyo"],["Je suis en retard","늦었어요","neujeosseoyo"],["Bonne chance","행운을 빌어요","haenguneul bireoyo"],["Bon voyage","여행 잘 다녀오세요","yeohaeng jal danyeooseyo"],["Je suis rentré (à la maison)","다녀왔습니다","danyeowatseumnida"],["Comment est… ? Comment ça va ?","어때요?","eottaeyo"]]}];
+var FICHES=[{"id":"seyo","t":"-(으)세요 : demander poliment","rule":"Radical + 세요 (radical en voyelle) ou 으세요 (radical en consonne). Sert à inviter ou à demander à quelqu’un de faire quelque chose, avec respect.","ex":[["여기 앉으세요.","Asseyez-vous ici.","yeogi anjeuseyo."],["이쪽으로 오세요.","Venez de ce côté.","ijjogeuro oseyo."],["천천히 읽으세요.","Lisez lentement.","cheoncheonhi ilgeuseyo."],["많이 드세요.","Mangez beaucoup. (honorifique)","mani deuseyo."]]},{"id":"juseyo","t":"-아/어 주세요 : demander un service","rule":"Radical + 아/어 주세요. On choisit 아 si la dernière voyelle est ㅏ ou ㅗ, 어 sinon (해 pour les verbes en 하다). Signifie « faites-le pour moi, s’il vous plaît ».","ex":[["문을 열어 주세요.","Ouvrez la porte, s’il vous plaît.","muneul yeoreo juseyo."],["사진을 찍어 주세요.","Prenez-moi en photo, s’il vous plaît.","sajineul jjigeo juseyo."],["천천히 말해 주세요.","Parlez lentement, s’il vous plaît.","cheoncheonhi malhae juseyo."],["도와 주세요.","Aidez-moi, s’il vous plaît.","dowa juseyo."]]},{"id":"jimaseyo","t":"-지 마세요 : ne faites pas","rule":"Radical + 지 마세요. C’est la forme négative de l’ordre poli, valable pour tous les verbes.","ex":[["여기에서 사진을 찍지 마세요.","Ne prenez pas de photos ici.","yeogieseo sajineul jjikji maseyo."],["걱정하지 마세요.","Ne vous inquiétez pas.","geokjeonghaji maseyo."],["늦지 마세요.","Ne soyez pas en retard.","neutji maseyo."],["그곳에 가지 마세요.","N’allez pas là-bas.","geugose gaji maseyo."]]},{"id":"suisseo","t":"-(으)ㄹ 수 있어요 / 없어요 : pouvoir","rule":"Radical + ㄹ 수 있어요 (radical en voyelle) ou 을 수 있어요 (radical en consonne). 있어요 dit la capacité ou la possibilité, 없어요 leur absence.","ex":[["한국어를 할 수 있어요.","Je sais parler coréen.","hangugeoreul hal su isseoyo."],["저는 수영할 수 없어요.","Je ne sais pas nager.","jeoneun suyeonghal su eopseoyo."],["내일 올 수 있어요?","Pouvez-vous venir demain ?","naeil ol su isseoyo"],["이 책을 읽을 수 있어요.","Je peux lire ce livre.","i chaegeul ilgeul su isseoyo."]]},{"id":"kkayo","t":"-(으)ㄹ까요? : proposer, demander un avis","rule":"Radical + ㄹ까요 ou 을까요. Avec « nous » sous-entendu, c’est une proposition : « et si nous… ? ».","ex":[["같이 갈까요?","On y va ensemble ?","gati galkkayo"],["뭐 먹을까요?","Qu’est-ce qu’on mange ?","mwo meogeulkkayo"],["커피 마실까요?","On boit un café ?","keopi masilkkayo"],["어디에서 만날까요?","Où se retrouve-t-on ?","eodieseo mannalkkayo"]]},{"id":"bsida","t":"-(으)ㅂ시다 et -아/어요 : inviter","rule":"Radical + ㅂ시다 ou 읍시다 (style direct) ; la forme en 아/어요 sert aussi à inviter dans la conversation courante.","ex":[["같이 갑시다.","Allons-y ensemble.","gati gapsida."],["우리 영화 봐요.","Allons voir un film.","uri yeonghwa bwayo."],["지금 시작합시다.","Commençons maintenant.","jigeum sijakapsida."],["점심 먹어요.","Déjeunons.","jeomsim meogeoyo."]]},{"id":"go","t":"-고 : et, puis","rule":"Radical + 고. Relie deux actions qui se suivent ou deux descriptions, comme « et » ou « puis ».","ex":[["숙제를 하고 자요.","Je fais mes devoirs, puis je dors.","sukjereul hago jayo."],["밥을 먹고 커피를 마셔요.","Je mange, puis je bois un café.","babeul meokgo keopireul masyeoyo."],["키가 크고 멋있어요.","Il est grand et classe.","kiga keugo meosisseoyo."],["이 집은 넓고 깨끗해요.","Cette maison est spacieuse et propre.","i jibeun neolgo kkaekkeutaeyo."]]},{"id":"jiman","t":"-지만 : mais","rule":"Radical + 지만. Oppose deux idées ; l’adjectif ou le verbe garde sa forme de base.","ex":[["맵지만 맛있어요.","C’est piquant, mais délicieux.","maepjiman masisseoyo."],["비싸지만 좋아요.","C’est cher, mais c’est bien.","bissajiman joayo."],["한국어는 어렵지만 재미있어요.","Le coréen est difficile, mais amusant.","hangugeoneun eoryeopjiman jaemiisseoyo."],["피곤하지만 일해요.","Je suis fatigué, mais je travaille.","pigonhajiman ilhaeyo."]]},{"id":"eoseo","t":"-아/어서 : parce que, et alors","rule":"Radical + 아/어서. Donne la cause ou enchaîne deux actions. Avec 서, on ne peut pas finir la phrase par un ordre ou une proposition.","ex":[["피곤해서 일찍 잤어요.","J’étais fatigué, donc je me suis couché tôt.","pigonhaeseo iljjik jasseoyo."],["늦어서 죄송합니다.","Je suis désolé d’être en retard.","neujeoseo joesonghamnida."],["비가 와서 집에 있어요.","Il pleut, donc je reste à la maison.","biga waseo jibe isseoyo."],["배가 고파서 빵을 먹어요.","J’ai faim, donc je mange du pain.","baega gopaseo ppangeul meogeoyo."]]},{"id":"nikka","t":"-(으)니까 : puisque, parce que","rule":"Radical + 니까 ou 으니까. Raison plus insistante que 아/어서 ; on peut l’employer avant un ordre ou une proposition.","ex":[["비가 오니까 우산을 가져가세요.","Il pleut, alors prenez un parapluie.","biga onikka usaneul gajyeogaseyo."],["시간이 없으니까 빨리 가요.","On n’a pas le temps, alors allons vite.","sigani eopseunikka ppalli gayo."],["추우니까 옷을 입으세요.","Il fait froid, alors mettez des vêtements.","chuunikka oseul ibeuseyo."],["맛있으니까 드세요.","C’est bon, alors mangez-en.","masisseunikka deuseyo."]]},{"id":"eoya","t":"-아/어야 해요 : devoir","rule":"Radical + 아/어야 해요. Exprime l’obligation ou la nécessité.","ex":[["일찍 일어나야 해요.","Je dois me lever tôt.","iljjik ireonaya haeyo."],["숙제를 해야 해요.","Je dois faire mes devoirs.","sukjereul haeya haeyo."],["병원에 가야 해요.","Je dois aller à l’hôpital.","byeongwone gaya haeyo."],["약을 먹어야 해요.","Je dois prendre des médicaments.","yageul meogeoya haeyo."]]},{"id":"goisseo","t":"-고 있어요 : être en train de","rule":"Radical + 고 있어요. Action en cours au moment où l’on parle.","ex":[["지금 밥을 먹고 있어요.","Je suis en train de manger.","jigeum babeul meokgo isseoyo."],["한국어를 공부하고 있어요.","J’étudie le coréen en ce moment.","hangugeoreul gongbuhago isseoyo."],["친구를 기다리고 있어요.","J’attends un ami.","chingureul gidarigo isseoyo."],["비가 오고 있어요.","Il est en train de pleuvoir.","biga ogo isseoyo."]]},{"id":"reo","t":"-(으)러 가요 : aller pour faire","rule":"Radical + 러 가요 ou 으러 가요. Indique le but d’un déplacement. Le verbe de mouvement est 가다, 오다 ou 다니다.","ex":[["책을 사러 서점에 가요.","Je vais à la librairie pour acheter un livre.","chaegeul sareo seojeome gayo."],["밥을 먹으러 식당에 가요.","Je vais au restaurant pour manger.","babeul meogeureo sikdange gayo."],["친구를 만나러 가요.","Je vais voir un ami.","chingureul mannareo gayo."],["운동하러 공원에 가요.","Je vais au parc pour faire du sport.","undonghareo gongwone gayo."]]},{"id":"lgeyo","t":"-(으)ㄹ게요 : promettre, décider","rule":"Radical + ㄹ게요 ou 을게요. Promesse ou décision prise sur le moment, avec « je » comme sujet.","ex":[["제가 할게요.","Je m’en occupe.","jega halgeyo."],["먼저 갈게요.","Je pars en premier.","meonjeo galgeyo."],["내일 전화할게요.","Je téléphonerai demain.","naeil jeonhwahalgeyo."],["이거 먹을게요.","Je prends ça.","igeo meogeulgeyo."]]},{"id":"lgeoyeyo","t":"-(으)ㄹ 거예요 : futur, supposition","rule":"Radical + ㄹ 거예요 ou 을 거예요. Dit ce qu’on va faire, ou ce qu’on suppose.","ex":[["내일 친구를 만날 거예요.","Demain, je verrai un ami.","naeil chingureul mannal geoyeyo."],["주말에 여행할 거예요.","Ce week-end, je voyagerai.","jumare yeohaenghal geoyeyo."],["비가 올 거예요.","Il va probablement pleuvoir.","biga ol geoyeyo."],["저는 한국에 갈 거예요.","J’irai en Corée.","jeoneun hanguge gal geoyeyo."]]},{"id":"ege","t":"에, 에게, 한테 : à","rule":"에 s’emploie pour un lieu ou un moment, 에게 et 한테 pour une personne (한테 est plus courant à l’oral).","ex":[["일곱 시에 일어나요.","Je me lève à sept heures.","ilgop sie ireonayo."],["친구에게 전화해요.","Je téléphone à un ami.","chinguege jeonhwahaeyo."],["동생한테 선물을 줘요.","Je donne un cadeau à mon petit frère.","dongsaenghante seonmureul jwoyo."],["학교에 가요.","Je vais à l’école.","hakgyoe gayo."]]},{"id":"buteo","t":"부터 … 까지 : de … à","rule":"부터 marque le début, 까지 la fin, dans le temps ou dans l’espace.","ex":[["아홉 시부터 여섯 시까지 일해요.","Je travaille de neuf heures à dix-huit heures.","ahop sibuteo yeoseot sikkaji ilhaeyo."],["월요일부터 금요일까지 학교에 가요.","Je vais à l’école du lundi au vendredi.","woryoilbuteo geumyoilkkaji hakgyoe gayo."],["서울까지 기차로 가요.","J’y vais en train jusqu’à Séoul.","seoulkkaji gicharo gayo."],["여기부터 읽으세요.","Lisez à partir d’ici.","yeogibuteo ilgeuseyo."]]},{"id":"boda","t":"보다 : plus … que","rule":"Nom + 보다. La phrase dit ce qui est plus grand, plus rapide, etc. que ce nom. 더 (plus) peut être ajouté.","ex":[["이것이 저것보다 커요.","Celui-ci est plus grand que celui-là.","igeosi jeogeotboda keoyo."],["버스가 지하철보다 느려요.","Le bus est plus lent que le métro.","beoseuga jihacheolboda neuryeoyo."],["오늘이 어제보다 더워요.","Il fait plus chaud aujourd’hui qu’hier.","oneuri eojeboda deowoyo."],["저는 커피보다 차를 좋아해요.","J’aime le thé plus que le café.","jeoneun keopiboda chareul joahaeyo."]]},{"id":"euro","t":"(으)로 : moyen, direction","rule":"로 après une voyelle ou ㄹ, 으로 après une consonne. Indique le moyen de transport, l’outil ou la direction.","ex":[["지하철로 가요.","J’y vais en métro.","jihacheollo gayo."],["연필로 써요.","J’écris au crayon.","yeonpillo sseoyo."],["오른쪽으로 가세요.","Allez vers la droite.","oreunjjogeuro gaseyo."],["한국어로 말해요.","Je parle en coréen.","hangugeoro malhaeyo."]]},{"id":"heure","t":"Dire l’heure : 시 et 분","rule":"Les heures prennent un nombre natif (한, 두, 세…) + 시. Les minutes prennent un nombre sino-coréen (오, 십, 삼십…) + 분.","ex":[["지금 세 시 삼십 분이에요.","Il est trois heures trente.","jigeum se si samsip bunieyo."],["아홉 시 십오 분이에요.","Il est neuf heures quinze.","ahop si sibo bunieyo."],["지금 열두 시예요.","Il est midi.","jigeum yeoldu siyeyo."],["몇 시에 만나요?","À quelle heure se retrouve-t-on ?","myeot sie mannayo"]]},{"id":"irreg_b","t":"Verbes irréguliers en ㅂ","rule":"Devant une voyelle, le ㅂ final devient 우 : 덥다 donne 더워요. Exceptions fréquentes : 좁다 (좁아요) et 입다 (입어요).","ex":[["오늘 정말 더워요.","Aujourd’hui, il fait vraiment chaud.","oneul jeongmal deowoyo."],["겨울에는 추워요.","En hiver, il fait froid.","gyeoureneun chuwoyo."],["이 음식은 매워요.","Ce plat est piquant.","i eumsigeun maewoyo."],["한국어는 어려워요.","Le coréen est difficile.","hangugeoneun eoryeowoyo."]]},{"id":"irreg_d","t":"Verbes irréguliers en ㄷ","rule":"Devant une voyelle, le ㄷ final devient ㄹ : 듣다 donne 들어요. Exception : 받다 (받아요).","ex":[["음악을 들어요.","J’écoute de la musique.","eumageul deureoyo."],["길을 물어요.","Je demande mon chemin.","gireul mureoyo."],["공원에서 걸어요.","Je marche dans le parc.","gongwoneseo georeoyo."],["선생님 말을 들었어요.","J’ai écouté ce que disait le professeur.","seonsaengnim mareul deureosseoyo."]]},{"id":"irreg_eu","t":"Verbes et adjectifs en ㅡ","rule":"Le ㅡ final tombe, puis on ajoute 아 ou 어 selon la voyelle précédente : 쓰다 donne 써요, 아프다 donne 아파요.","ex":[["편지를 써요.","J’écris une lettre.","pyeonjireul sseoyo."],["요즘 바빠요.","Ces temps-ci, je suis occupé.","yojeum bappayo."],["머리가 아파요.","J’ai mal à la tête.","meoriga apayo."],["그 꽃이 예뻐요.","Cette fleur est jolie.","geu kkochi yeppeoyo."]]},{"id":"irreg_reu","t":"Verbes et adjectifs en 르","rule":"Avec 아/어, le 르 devient ㄹ + ㄹ : 모르다 donne 몰라요, 부르다 donne 불러요, 빠르다 donne 빨라요.","ex":[["잘 몰라요.","Je ne sais pas bien.","jal mollayo."],["택시를 불러요.","J’appelle un taxi.","taeksireul bulleoyo."],["기차가 빨라요.","Le train est rapide.","gichaga ppallayo."],["노래를 불러요.","Je chante une chanson.","noraereul bulleoyo."]]},{"id":"adjn","t":"Adjectif devant un nom : -(으)ㄴ","rule":"Radical + ㄴ (voyelle) ou 은 (consonne). Pour 있다 et 없다, on emploie 는 : 맛있는, 재미없는.","ex":[["예쁜 꽃","une jolie fleur","yeppeun kkot"],["큰 가방","un grand sac","keun gabang"],["좋은 사람","une bonne personne","joeun saram"],["맛있는 음식","un plat délicieux","masitneun eumsik"]]},{"id":"verben","t":"Verbe devant un nom : -는","rule":"Radical + 는. Le verbe décrit le nom qui suit (une proposition relative).","ex":[["먹는 사람","la personne qui mange","meongneun saram"],["공부하는 학생","l’étudiant qui étudie","gongbuhaneun haksaeng"],["제가 좋아하는 음식","le plat que j’aime","jega joahaneun eumsik"],["지금 읽는 책","le livre que je lis en ce moment","jigeum ingneun chaek"]]},{"id":"boseyo","t":"-아/어 보세요 : essayer","rule":"Radical + 아/어 보세요. On invite quelqu’un à essayer, à goûter ou à voir.","ex":[["한번 먹어 보세요.","Goûtez-le une fois.","hanbeon meogeo boseyo."],["이 옷을 입어 보세요.","Essayez ce vêtement.","i oseul ibeo boseyo."],["이 책을 읽어 보세요.","Essayez de lire ce livre.","i chaegeul ilgeo boseyo."],["한번 가 보세요.","Allez-y voir une fois.","hanbeon ga boseyo."]]},{"id":"neyo","t":"-네요 : constater, s’exclamer","rule":"Radical + 네요. Réaction à ce qu’on découvre ou voit à l’instant.","ex":[["날씨가 좋네요.","Il fait beau !","nalssiga jonneyo."],["한국어를 잘하시네요.","Vous parlez bien coréen !","hangugeoreul jalhasineyo."],["벌써 열두 시네요.","Il est déjà midi !","beolsseo yeoldu sineyo."],["이 집이 정말 크네요.","Cette maison est vraiment grande !","i jibi jeongmal keuneyo."]]}];
+var DIALOGS=[{"l":["뭐 드릴까요?","커피 두 잔 주세요."],"q":"Que commande la personne ?","a":"Deux cafés","w":["Deux thés","Un café","Deux bières"],"tr":"— Que désirez-vous ? — Deux cafés, s’il vous plaît."},{"l":["지금 몇 시예요?","세 시 삼십 분이에요."],"q":"Quelle heure est-il ?","a":"Trois heures trente","w":["Deux heures trente","Trois heures","Quatre heures trente"],"tr":"— Quelle heure est-il ? — Il est trois heures trente."},{"l":["어디에 가요?","도서관에 가요."],"q":"Où va la personne ?","a":"À la bibliothèque","w":["À l’école","À l’hôpital","Au marché"],"tr":"— Où allez-vous ? — Je vais à la bibliothèque."},{"l":["이거 얼마예요?","오천 원이에요."],"q":"Quel est le prix ?","a":"5 000 wons","w":["15 000 wons","50 000 wons","500 wons"],"tr":"— C’est combien ? — C’est 5 000 wons."},{"l":["주말에 뭐 해요?","친구를 만나요."],"q":"Que fait la personne ce week-end ?","a":"Elle voit un ami","w":["Elle étudie","Elle travaille","Elle voyage"],"tr":"— Que faites-vous ce week-end ? — Je vois un ami."},{"l":["이름이 뭐예요?","저는 민수예요."],"q":"Comment s’appelle la personne ?","a":"Minsu","w":["Mina","Jisu","Hyunwoo"],"tr":"— Comment vous appelez-vous ? — Je m’appelle Minsu."},{"l":["머리가 아파요.","약을 먹으세요."],"q":"Que conseille la deuxième personne ?","a":"Prendre un médicament","w":["Dormir","Aller à l’école","Boire de l’eau"],"tr":"— J’ai mal à la tête. — Prenez un médicament."},{"l":["오늘 날씨가 어때요?","비가 와요."],"q":"Quel temps fait-il ?","a":"Il pleut","w":["Il fait beau","Il neige","Il y a du vent"],"tr":"— Quel temps fait-il aujourd’hui ? — Il pleut."},{"l":["학교에 어떻게 가요?","버스로 가요."],"q":"Comment la personne va-t-elle à l’école ?","a":"En bus","w":["En métro","À pied","En voiture"],"tr":"— Comment allez-vous à l’école ? — J’y vais en bus."},{"l":["한국어를 공부해요?","네, 매일 공부해요."],"q":"Combien de fois étudie-t-elle le coréen ?","a":"Tous les jours","w":["Une fois par semaine","Jamais","Le week-end seulement"],"tr":"— Vous étudiez le coréen ? — Oui, j’étudie tous les jours."},{"l":["몇 명이에요?","세 명이에요."],"q":"Combien de personnes y a-t-il ?","a":"Trois","w":["Deux","Quatre","Cinq"],"tr":"— Vous êtes combien ? — Nous sommes trois."},{"l":["생일이 언제예요?","시월 오 일이에요."],"q":"Quand est son anniversaire ?","a":"Le 5 octobre","w":["Le 5 juin","Le 10 mai","Le 15 octobre"],"tr":"— Quand est votre anniversaire ? — Le 5 octobre."},{"l":["어디가 아파요?","배가 아파요."],"q":"Où a-t-elle mal ?","a":"Au ventre","w":["À la tête","Au dos","Aux jambes"],"tr":"— Où avez-vous mal ? — J’ai mal au ventre."},{"l":["뭐 좋아해요?","저는 영화를 좋아해요."],"q":"Qu’aime la personne ?","a":"Les films","w":["La musique","Le sport","La lecture"],"tr":"— Qu’aimez-vous ? — J’aime les films."},{"l":["여기에서 지하철역이 멀어요?","아니요, 가까워요."],"q":"La station de métro est-elle loin ?","a":"Non, elle est proche","w":["Oui, elle est loin","Elle est fermée","On ne sait pas"],"tr":"— La station de métro est loin d’ici ? — Non, elle est proche."},{"l":["뭐 마실까요?","저는 물을 마실게요."],"q":"Que veut boire la deuxième personne ?","a":"De l’eau","w":["Du café","Du thé","Du jus"],"tr":"— Qu’est-ce qu’on boit ? — Moi, je boirai de l’eau."},{"l":["지금 뭐 하고 있어요?","책을 읽고 있어요."],"q":"Que fait la personne ?","a":"Elle lit un livre","w":["Elle regarde un film","Elle cuisine","Elle dort"],"tr":"— Que faites-vous en ce moment ? — Je suis en train de lire un livre."},{"l":["한국에 몇 번 왔어요?","한 번 왔어요."],"q":"Combien de fois est-elle venue en Corée ?","a":"Une fois","w":["Deux fois","Trois fois","Jamais"],"tr":"— Combien de fois êtes-vous venu en Corée ? — Une fois."},{"l":["내일 시간 있어요?","아니요, 일이 있어요."],"q":"Pourquoi la personne n’est-elle pas libre demain ?","a":"Elle a des choses à faire (du travail)","w":["Elle est malade","Elle voyage","Elle étudie"],"tr":"— Avez-vous du temps demain ? — Non, j’ai du travail."},{"l":["어서 오세요. 뭐 찾으세요?","우산을 찾아요."],"q":"Que cherche le client ?","a":"Un parapluie","w":["Un sac","Des chaussures","Un chapeau"],"tr":"— Bienvenue. Que cherchez-vous ? — Je cherche un parapluie."},{"l":["어디에서 왔어요?","프랑스에서 왔어요."],"q":"D’où vient la personne ?","a":"De France","w":["De Corée","Du Japon","D’Angleterre"],"tr":"— D’où venez-vous ? — Je viens de France."},{"l":["몇 시에 일어나요?","일곱 시에 일어나요."],"q":"À quelle heure se lève-t-elle ?","a":"À sept heures","w":["À six heures","À huit heures","À neuf heures"],"tr":"— À quelle heure vous levez-vous ? — Je me lève à sept heures."},{"l":["이 가방 얼마예요?","삼만 원이에요."],"q":"Quel est le prix du sac ?","a":"30 000 wons","w":["3 000 wons","300 000 wons","13 000 wons"],"tr":"— Combien coûte ce sac ? — 30 000 wons."},{"l":["어제 뭐 했어요?","영화를 봤어요."],"q":"Qu’a fait la personne hier ?","a":"Elle a vu un film","w":["Elle a cuisiné","Elle a travaillé","Elle a voyagé"],"tr":"— Qu’avez-vous fait hier ? — J’ai vu un film."}];
+var PASSAGES=[{"t":"영업시간 : 오전 아홉 시 ~ 오후 여섯 시","q":"À quelle heure ferme le magasin ?","a":"À 18 h","w":["À 9 h","À 12 h","À 21 h"],"tr":"Horaires d’ouverture : de 9 h à 18 h."},{"t":"김밥 3,000원\n라면 4,000원\n비빔밥 7,000원","q":"Quel plat coûte 7 000 wons ?","a":"Le bibimbap","w":["Le gimbap","Les ramen","Le bulgogi"],"tr":"Gimbap 3 000 ₩ / ramen 4 000 ₩ / bibimbap 7 000 ₩."},{"t":"민수 씨, 내일 오후 두 시에 학교 앞에서 만나요.","q":"Où ont-ils rendez-vous ?","a":"Devant l’école","w":["À la bibliothèque","À la gare","Au restaurant"],"tr":"Minsu, retrouvons-nous demain à 14 h devant l’école."},{"t":"저는 프랑스 사람이에요. 서울에서 한국어를 공부해요.","q":"Qu’étudie la personne à Séoul ?","a":"Le coréen","w":["L’anglais","Le français","La musique"],"tr":"Je suis français(e). J’étudie le coréen à Séoul."},{"t":"오늘은 비가 와요. 우산을 가져가세요.","q":"Que faut-il emporter ?","a":"Un parapluie","w":["Un manteau","Un chapeau","Un sac"],"tr":"Il pleut aujourd’hui. Prenez un parapluie."},{"t":"저는 아침 일곱 시에 일어나요. 여덟 시에 회사에 가요.","q":"À quelle heure part-elle au travail ?","a":"À 8 h","w":["À 7 h","À 9 h","À 6 h"],"tr":"Je me lève à 7 h. Je vais au bureau à 8 h."},{"t":"주말에 가족과 같이 공원에서 산책했어요.","q":"Qu’a-t-elle fait ce week-end ?","a":"Elle s’est promenée au parc avec sa famille","w":["Elle a travaillé","Elle est allée au cinéma","Elle a fait du sport seule"],"tr":"Ce week-end, je me suis promené au parc avec ma famille."},{"t":"내일은 친구 생일이에요. 선물을 사러 백화점에 가요.","q":"Pourquoi va-t-elle au grand magasin ?","a":"Pour acheter un cadeau","w":["Pour manger","Pour voir un film","Pour travailler"],"tr":"Demain, c’est l’anniversaire d’un ami. Je vais au grand magasin acheter un cadeau."},{"t":"오늘은 너무 추워요. 코트를 입으세요.","q":"Que recommande le texte ?","a":"Mettre un manteau","w":["Prendre un parapluie","Ouvrir la fenêtre","Boire du thé"],"tr":"Il fait très froid aujourd’hui. Mettez un manteau."},{"t":"저는 학생이에요. 학교는 집에서 가까워요. 걸어서 십 분 걸려요.","q":"Combien de temps met-elle pour aller à l’école ?","a":"10 minutes","w":["1 heure","30 minutes","5 minutes"],"tr":"Je suis étudiante. L’école est proche de chez moi. Il faut dix minutes à pied."},{"t":"이 식당은 김치찌개가 맛있어요. 하지만 조금 비싸요.","q":"Que pense l’auteur du restaurant ?","a":"Le ragoût de kimchi est bon mais un peu cher","w":["Tout est bon marché","La nourriture est mauvaise","Le restaurant est fermé"],"tr":"Dans ce restaurant, le ragoût de kimchi est bon. Mais c’est un peu cher."},{"t":"도서관은 월요일부터 금요일까지 열어요. 주말에는 닫아요.","q":"Quand la bibliothèque est-elle fermée ?","a":"Le week-end","w":["Le lundi","Le vendredi","Tous les jours"],"tr":"La bibliothèque est ouverte du lundi au vendredi. Elle ferme le week-end."},{"t":"저는 커피를 좋아하지만 밤에는 안 마셔요.","q":"Quand ne boit-elle pas de café ?","a":"La nuit","w":["Le matin","À midi","Le week-end"],"tr":"J’aime le café, mais je n’en bois pas la nuit."},{"t":"이 버스는 시청에 가요. 시청 앞에서 내리세요.","q":"Où faut-il descendre ?","a":"Devant la mairie","w":["À la gare","À l’aéroport","À l’école"],"tr":"Ce bus va à la mairie. Descendez devant la mairie."},{"t":"동생은 일곱 살이에요. 학교에 다녀요.","q":"Quel âge a le petit frère (ou la petite sœur) ?","a":"7 ans","w":["17 ans","27 ans","6 ans"],"tr":"Mon petit frère a 7 ans. Il va à l’école."},{"t":"민수 씨는 의사예요. 병원에서 일해요.","q":"Où travaille Minsu ?","a":"À l’hôpital","w":["À l’école","Dans un bureau","Au restaurant"],"tr":"Minsu est médecin. Il travaille à l’hôpital."},{"t":"내일은 시험이 있어요. 오늘 도서관에서 공부해요.","q":"Pourquoi étudie-t-elle aujourd’hui ?","a":"Parce qu’il y a un examen demain","w":["Parce qu’elle est en congé","Parce qu’il pleut","Parce qu’elle aime étudier"],"tr":"Demain, il y a un examen. Aujourd’hui, j’étudie à la bibliothèque."},{"t":"저는 여름을 좋아해요. 바다에서 수영할 수 있어요.","q":"Pourquoi aime-t-il l’été ?","a":"Parce qu’il peut nager à la mer","w":["Parce qu’il fait froid","Parce qu’il neige","Parce qu’il y a l’école"],"tr":"J’aime l’été. On peut nager à la mer."},{"t":"이 가방은 너무 무거워요. 가벼운 가방을 사고 싶어요.","q":"Que veut-il acheter ?","a":"Un sac léger","w":["Un sac lourd","Un manteau","Des chaussures"],"tr":"Ce sac est trop lourd. Je veux acheter un sac léger."},{"t":"한국 음식은 맵지만 맛있어요.","q":"Comment est la cuisine coréenne ?","a":"Piquante mais délicieuse","w":["Sucrée","Froide","Fade"],"tr":"La cuisine coréenne est piquante, mais délicieuse."},{"t":"엄마, 저 지금 학교에서 출발해요. 여섯 시에 집에 도착할 거예요.","q":"À quelle heure arrivera-t-il à la maison ?","a":"À six heures","w":["À sept heures","À cinq heures","À huit heures"],"tr":"Maman, je pars de l’école maintenant. J’arriverai à la maison à six heures."},{"t":"비빔밥에는 채소와 고기가 들어가요.","q":"Qu’y a-t-il dans le bibimbap ?","a":"Des légumes et de la viande","w":["Du poisson et du lait","Des fruits","Du pain"],"tr":"Dans le bibimbap, il y a des légumes et de la viande."},{"t":"내일부터 방학이에요. 저는 한국에 여행하러 갈 거예요.","q":"Que fera-t-elle pendant les vacances ?","a":"Elle voyagera en Corée","w":["Elle travaillera","Elle restera chez elle","Elle étudiera le français"],"tr":"À partir de demain, ce sont les vacances. J’irai voyager en Corée."},{"t":"이 의자는 사용하지 마세요.","q":"Que dit l’écriteau ?","a":"Il ne faut pas utiliser cette chaise","w":["Il faut s’asseoir ici","La chaise est à vendre","La chaise est neuve"],"tr":"N’utilisez pas cette chaise."},{"t":"오늘은 제 생일이에요. 친구들이 선물을 줬어요.","q":"Qu’ont fait les amis ?","a":"Ils ont offert des cadeaux","w":["Ils ont cuisiné","Ils ont téléphoné","Ils sont partis"],"tr":"Aujourd’hui, c’est mon anniversaire. Mes amis m’ont offert des cadeaux."},{"t":"저는 매일 아침 공원에서 운동해요.","q":"Quand fait-elle du sport ?","a":"Chaque matin","w":["Chaque soir","Seulement le week-end","Une fois par mois"],"tr":"Je fais du sport au parc chaque matin."},{"t":"이 지하철은 서울역에서 갈아타세요.","q":"Où faut-il changer ?","a":"À la gare de Séoul","w":["À l’aéroport","À l’université","À la mairie"],"tr":"Changez à la gare de Séoul."},{"t":"저는 고양이 한 마리와 개 두 마리가 있어요.","q":"Combien d’animaux a-t-elle en tout ?","a":"3","w":["2","4","1"],"tr":"J’ai un chat et deux chiens."},{"t":"저는 한국 음식을 좋아해요. 특히 김치찌개를 자주 먹어요.","q":"Que mange-t-elle souvent ?","a":"Du ragoût de kimchi","w":["Du bulgogi","Des ramen","De la pizza"],"tr":"J’aime la cuisine coréenne. Je mange souvent du ragoût de kimchi."},{"t":"오늘 오후에 친구하고 영화를 볼 거예요.","q":"Que fera-t-elle cet après-midi ?","a":"Elle verra un film avec un ami","w":["Elle fera du sport","Elle étudiera","Elle ira au marché"],"tr":"Cet après-midi, je verrai un film avec un ami."}];
+var BLANKS=[{"s":"저___ 학생이에요.","h":"Moi, je suis étudiant(e).","a":"는","w":["를","에","에서"]},{"s":"물___ 마셔요.","h":"Je bois de l’eau.","a":"을","w":["이","에","로"]},{"s":"학교___ 가요.","h":"Je vais à l’école.","a":"에","w":["를","이","의"]},{"s":"집___ 공부해요.","h":"J’étudie à la maison.","a":"에서","w":["를","가","의"]},{"s":"친구___ 같이 영화를 봐요.","h":"Je regarde un film avec un ami.","a":"하고","w":["를","에","에서"]},{"s":"비___ 와요.","h":"Il pleut.","a":"가","w":["를","에서","에"]},{"s":"저는 커피___ 좋아해요.","h":"J’aime le café.","a":"를","w":["가","에","에서"]},{"s":"일곱 시___ 일어나요.","h":"Je me lève à sept heures.","a":"에","w":["를","에서","가"]},{"s":"저는 한국어___ 공부해요.","h":"J’étudie le coréen.","a":"를","w":["에서","에게","의"]},{"s":"친구___ 선물을 줘요.","h":"Je donne un cadeau à un ami.","a":"에게","w":["를","에서","부터"]},{"s":"서울___ 부산까지 기차로 가요.","h":"Je vais de Séoul à Busan en train.","a":"에서","w":["를","가","하고"]},{"s":"아홉 시___ 여섯 시까지 일해요.","h":"Je travaille de neuf heures à dix-huit heures.","a":"부터","w":["에서","를","가"]},{"s":"이 가방은 저것___ 더 커요.","h":"Ce sac est plus grand que celui-là.","a":"보다","w":["처럼","부터","하고"]},{"s":"지하철___ 가요.","h":"J’y vais en métro.","a":"로","w":["를","가","에게"]},{"s":"연필___ 써요.","h":"J’écris au crayon.","a":"로","w":["에","가","하고"]},{"s":"저는 한국어를 할 ___ 있어요.","h":"Je sais parler coréen.","a":"수","w":["것","때","곳"]},{"s":"같이 갈___?","h":"On y va ensemble ?","a":"까요","w":["게요","세요","지만"]},{"s":"제가 먼저 갈___.","h":"Je pars en premier (promesse).","a":"게요","w":["까요","세요","지만"]},{"s":"여기 앉___.","h":"Asseyez-vous ici (poliment).","a":"으세요","w":["세요","이에요","습니다"]},{"s":"비가 와서 집___ 있어요.","h":"Il pleut, donc je reste à la maison.","a":"에","w":["를","이","도"]},{"s":"저는 어제 영화를 ___.","h":"Hier, j’ai vu un film.","a":"봤어요","w":["봐요","볼 거예요","보세요"]},{"s":"내일 친구를 ___.","h":"Demain, je verrai un ami.","a":"만날 거예요","w":["만났어요","만나세요","만나지 마세요"]},{"s":"지금 밥을 먹___ 있어요.","h":"Je suis en train de manger.","a":"고","w":["서","지만","으니까"]},{"s":"피곤___ 일찍 잤어요.","h":"J’étais fatigué, donc je me suis couché tôt.","a":"해서","w":["하지만","하고","하세요"]},{"s":"맵___ 맛있어요.","h":"C’est piquant, mais délicieux.","a":"지만","w":["아서","고","세요"]},{"s":"일찍 일어나___ 해요.","h":"Je dois me lever tôt.","a":"야","w":["서","고","면"]},{"s":"책을 사___ 서점에 가요.","h":"Je vais à la librairie pour acheter un livre.","a":"러","w":["고","서","지만"]},{"s":"오늘은 날씨가 ___.","h":"Il fait beau aujourd’hui.","a":"좋아요","w":["좋아해요","좋아하세요","좋았어요"]},{"s":"저는 물을 ___.","h":"Je bois de l’eau.","a":"마셔요","w":["마셔서","마시고","마실까요"]},{"s":"시간이 ___ 빨리 갑시다.","h":"Puisqu’on n’a pas le temps, allons vite.","a":"없으니까","w":["없어서","없지만","없고"]},{"s":"지금 몇 ___예요?","h":"Quelle heure est-il ?","a":"시","w":["개","명","분"]},{"s":"학생이 세 ___ 있어요.","h":"Il y a trois étudiants.","a":"명","w":["개","마리","잔"]},{"s":"물 한 ___ 주세요.","h":"Une bouteille d’eau, s’il vous plaît.","a":"병","w":["마리","권","대"]},{"s":"커피 두 ___ 주세요.","h":"Deux cafés, s’il vous plaît.","a":"잔","w":["마리","권","대"]},{"s":"책을 한 ___ 샀어요.","h":"J’ai acheté un livre.","a":"권","w":["잔","마리","대"]},{"s":"저는 한국 사람___ 아니에요.","h":"Je ne suis pas coréen(ne).","a":"이","w":["을","에","에서"]},{"s":"날씨가 너무 ___요.","h":"Il fait trop chaud.","a":"더워","w":["덥어","더우어","덥아"]},{"s":"머리가 ___요.","h":"J’ai mal à la tête.","a":"아파","w":["아프어","아퍼","아프아"]},{"s":"택시를 ___요.","h":"J’appelle un taxi.","a":"불러","w":["부르어","불라","부르러"]},{"s":"음악을 ___요.","h":"J’écoute de la musique.","a":"들어","w":["듣어","듣아","드어"]},{"s":"제가 좋아___ 음식","h":"la nourriture que j’aime","a":"하는","w":["한","해","하고"]},{"s":"___ 가방을 사고 싶어요.","h":"Je veux acheter un grand sac.","a":"큰","w":["크는","크고","커서"]},{"s":"주말에 가족___ 같이 여행해요.","h":"Le week-end, je voyage avec ma famille.","a":"과","w":["와","를","에서"]},{"s":"친구___ 같이 먹어요.","h":"Je mange avec un ami.","a":"와","w":["과","를","에서"]}];
+
+THEMES.push.apply(THEMES,NEW_THEMES);
 var ALL=[];
 THEMES.forEach(function(t){
   t.items=t.raw.map(function(r,i){return {id:t.id+'-'+i,fr:r[0],ko:r[1],ro:r[2],theme:t.id};});
@@ -1128,7 +1225,7 @@ function renderQuestion(){
     var b=el('button','opt'+(Q.mode==='ko-fr'||Q.mode==='read'?'':' ko'),text);b.type='button';
     b.addEventListener('click',function(){
       if(Q.locked)return;Q.locked=true;
-      var ok=text===q.correct;
+      var ok=text===q.correct;noteResult(q.item,ok);
       $$('.opt',opts).forEach(function(o){
         o.disabled=true;
         if(o.textContent===q.correct)o.classList.add('ok');
@@ -1179,8 +1276,674 @@ function renderResult(){
   card.appendChild(row);box.appendChild(card);
 }
 
+/* ======================= Parcours TOPIK I ======================= */
+var ITEM={};ALL.forEach(function(x){ITEM[x.id]=x;});
+var WORDS=ALL.filter(function(x){return x.ko.length<=6&&x.ko.indexOf(' ')<0&&x.ko.indexOf('?')<0;});
+var SENT=[];FICHES.forEach(function(f){f.ex.forEach(function(e){SENT.push({ko:e[0],fr:e[1],ro:e[2]});});});
+
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function fmtNum(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function todayNum(){var d=new Date();d.setHours(0,0,0,0);return Math.round(d.getTime()/86400000);}
+function touchDay(){var t=todayNum();if(store.days.indexOf(t)<0){store.days.push(t);if(store.days.length>400)store.days.shift();save();}}
+function streak(){
+  var t=todayNum(),cur=store.days.indexOf(t)>=0?t:t-1,n=0;
+  while(store.days.indexOf(cur)>=0){n++;cur--;}
+  return n;
+}
+function isKnown(x){var s=store.srs[x.id];return !!store.known[x.id]||!!(s&&s.b>=3);}
+function knownTotal(){var n=0;ALL.forEach(function(x){if(isKnown(x))n++;});return n;}
+function noteResult(item,ok){
+  if(!item||!item.id||!ITEM[item.id])return;
+  if(ok){if(store.wrong[item.id]){delete store.wrong[item.id];save();}}
+  else{store.wrong[item.id]=1;save();}
+  touchDay();
+}
+function wrongItems(){return Object.keys(store.wrong).map(function(id){return ITEM[id];}).filter(Boolean);}
+
+/* ---------- Nombres coréens (pour les exercices générés) ---------- */
+var NATIVE=['','한','두','세','네','다섯','여섯','일곱','여덟','아홉','열','열한','열두','열세','열네','열다섯','열여섯','열일곱','열여덟','열아홉','스무'];
+var SINO_D=['','일','이','삼','사','오','육','칠','팔','구'];
+function sinoBelow(x){
+  var s='',th=Math.floor(x/1000),h=Math.floor(x/100)%10,t=Math.floor(x/10)%10,o=x%10;
+  if(th)s+=(th>1?SINO_D[th]:'')+'천';
+  if(h)s+=(h>1?SINO_D[h]:'')+'백';
+  if(t)s+=(t>1?SINO_D[t]:'')+'십';
+  if(o)s+=SINO_D[o];
+  return s;
+}
+function sino(n){
+  if(n===0)return '영';
+  var man=Math.floor(n/10000),rest=n%10000,out='';
+  if(man)out+=(man>1?sinoBelow(man):'')+'만';
+  if(rest)out+=(out?' ':'')+sinoBelow(rest);
+  return out;
+}
+var MON_KO=['','일월','이월','삼월','사월','오월','유월','칠월','팔월','구월','시월','십일월','십이월'];
+var MON_FR=['','janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+/* ---------- Fabrique de questions ---------- */
+function finalize(q){var c=q.options[0];q.options=shuffle(q.options);q.answer=q.options.indexOf(c);return q;}
+function opts4(correct,cands){
+  var o=[correct];
+  shuffle(cands).forEach(function(c){if(o.length<4&&o.indexOf(c)<0)o.push(c);});
+  return o;
+}
+function qWord(x){
+  var c=WORDS.map(function(y){return y.fr;}).filter(function(f){return f!==x.fr;});
+  return finalize({label:'Écoute le mot. Que signifie-t-il ?',audio:x.ko,text:x.ko,options:opts4(x.fr,c),explain:x.ko+' ('+x.ro+') : '+x.fr+'.',item:x});
+}
+function qSent(s){
+  var c=SENT.map(function(y){return y.fr;}).filter(function(f){return f!==s.fr;});
+  return finalize({label:'Écoute la phrase. Que signifie-t-elle ?',audio:s.ko,text:s.ko,options:opts4(s.fr,c),explain:s.ko+' ('+s.ro+') : '+s.fr});
+}
+function qDialog(d){
+  return finalize({label:'Écoute le dialogue, puis réponds.',audio:d.l,text:d.l.join(' / '),question:d.q,options:[d.a].concat(d.w),explain:d.l.join(' / ')+'\n'+d.tr});
+}
+var PRICES=[500,1000,1500,2000,2500,3000,3500,4000,4500,5000,6000,7000,8000,9000,10000,12000,15000,20000,25000,30000,35000,40000,50000,80000,100000];
+function qPrice(){
+  var i=Math.floor(Math.random()*PRICES.length),n=PRICES[i];
+  var c=[PRICES[i-1],PRICES[i+1],PRICES[i-2],PRICES[i+2],n*10,n/10].filter(function(v){return v&&v!==n&&v>=500&&v<=1000000&&Math.floor(v)===v;});
+  var f=function(v){return fmtNum(v)+' wons';};
+  return finalize({label:'Écoute le prix. Quel montant entends-tu ?',audio:sino(n)+' 원',text:sino(n)+' 원',options:opts4(f(n),c.map(f)),explain:sino(n)+' 원 = '+f(n)+'.'});
+}
+var MINS=[0,10,15,20,30,40,45,50];
+function fmtTime(h,m){return h+' h'+(m?' '+(m<10?'0':'')+m:'');}
+function koTime(h,m){return NATIVE[h]+' 시'+(m?' '+sino(m)+' 분':'');}
+function qTime(){
+  var h=1+Math.floor(Math.random()*12),m=pick(MINS);
+  var other=MINS.filter(function(v){return v!==m;});
+  var c=[fmtTime(h%12+1,m),fmtTime(h===1?12:h-1,m),fmtTime(h,pick(other)),fmtTime(h,pick(other)),fmtTime(h%12+1,pick(other))];
+  return finalize({label:'Écoute l’heure. Quelle heure entends-tu ?',audio:koTime(h,m),text:koTime(h,m),options:opts4(fmtTime(h,m),c),explain:koTime(h,m)+' = '+fmtTime(h,m)+'.'});
+}
+var DAYS=[1,2,3,5,7,10,11,15,20,21,25,30];
+function koDate(m,d){return MON_KO[m]+' '+sino(d)+' 일';}
+function frDate(m,d){return d+' '+MON_FR[m];}
+function qDate(){
+  var m=1+Math.floor(Math.random()*12),d=pick(DAYS);
+  var m2=m%12+1,d2=pick(DAYS.filter(function(v){return v!==d;}));
+  var c=[frDate(m,d2),frDate(m2,d),frDate(m2,d2),frDate(1+(m+5)%12,d)];
+  return finalize({label:'Écoute la date. Quelle date entends-tu ?',audio:koDate(m,d),text:koDate(m,d),options:opts4(frDate(m,d),c),explain:koDate(m,d)+' = '+frDate(m,d)+'.'});
+}
+var COUNTERS=[['개','objets'],['명','personnes'],['마리','animaux'],['잔','verres'],['병','bouteilles'],['권','livres']];
+function qCount(){
+  var ci=Math.floor(Math.random()*COUNTERS.length),c0=COUNTERS[ci],n=2+Math.floor(Math.random()*9);
+  var oc=COUNTERS.filter(function(x,i){return i!==ci;});
+  var f=function(k,c){return k+' '+c[1];};
+  var c=[f(n+1,c0),f(n===2?4:n-1,c0),f(n,pick(oc)),f(n+2>10?n-2:n+2,c0)];
+  return finalize({label:'Écoute la quantité. Que comptes-tu ?',audio:NATIVE[n]+' '+c0[0],text:NATIVE[n]+' '+c0[0],options:opts4(f(n,c0),c),explain:NATIVE[n]+' '+c0[0]+' = '+f(n,c0)+'.'});
+}
+function qPassage(p){
+  return finalize({label:'Lis le texte, puis réponds.',prompt:p.t,pclass:'passage',question:p.q,options:[p.a].concat(p.w),explain:p.t.replace(/\n/g,' / ')+'\n'+p.tr});
+}
+function qBlank(b){
+  return finalize({label:'Choisis ce qui complète la phrase.',prompt:b.s,blank:true,hint:b.h,koOpts:true,options:[b.a].concat(b.w),explain:b.s.replace('___',b.a)+' — '+b.h});
+}
+function qDict(x,mode,pool){
+  var q={label:'Écoute, puis écris le mot en hangeul.',audio:x.ko,text:x.ko,hint:x.fr,answerText:x.ko,item:x,explain:x.ko+' ('+x.ro+') : '+x.fr+'.'};
+  if(mode==='type'){q.input=true;return q;}
+  q.label='Écoute, puis choisis le bon mot.';q.koOpts=true;
+  q.options=opts4(x.ko,pool.map(function(y){return y.ko;}).filter(function(k){return k!==x.ko;}));
+  return finalize(q);
+}
+function qErr(x){
+  var c=WORDS.map(function(y){return y.fr;}).filter(function(f){return f!==x.fr;});
+  return finalize({label:'Que signifie ce mot ?',prompt:x.ko,pclass:'qprompt',audio:x.ko,text:x.ko,options:opts4(x.fr,c),explain:x.ko+' ('+x.ro+') : '+x.fr+'.',item:x});
+}
+function wordPool(theme){
+  var p=WORDS.filter(function(x){return theme==='all'||x.theme===theme;});
+  return p.length>=4?p:WORDS;
+}
+function genOne(kind,pool,used){
+  if(kind==='mots'){var x,g=0;do{x=pick(pool);g++;}while(used.w[x.id]&&g<40);used.w[x.id]=1;return qWord(x);}
+  if(kind==='phrases'){var s,h=0;do{s=pick(SENT);h++;}while(used.s[s.ko]&&h<40);used.s[s.ko]=1;return qSent(s);}
+  if(kind==='dialogues'){var d,j=0;do{d=pick(DIALOGS);j++;}while(used.d[d.l[0]]&&j<40);used.d[d.l[0]]=1;return qDialog(d);}
+  if(kind==='prix')return qPrice();
+  if(kind==='heures')return qTime();
+  if(kind==='dates')return qDate();
+  return qCount();
+}
+function genListen(sub,n,theme){
+  var out=[],pool=wordPool(theme),used={w:{},s:{},d:{}};
+  var kinds=sub==='mix'?['mots','phrases','dialogues','prix','heures','dates','quantites']:[sub];
+  var order=[];
+  while(order.length<n)order=order.concat(shuffle(kinds));
+  for(var k=0;k<n;k++)out.push(genOne(order[k],pool,used));
+  return out;
+}
+function genRead(sub,n){
+  var ps=shuffle(PASSAGES),bs=shuffle(BLANKS),out=[],a=0,b=0;
+  for(var k=0;k<n;k++){
+    var useP=sub==='textes'?true:(sub==='trous'?false:k%2===0);
+    if(useP){out.push(qPassage(ps[a%ps.length]));a++;}else{out.push(qBlank(bs[b%bs.length]));b++;}
+  }
+  return out;
+}
+
+/* ---------- Lecture séquentielle (dialogues) ---------- */
+function speakSeq(arr,btn,cb){
+  if(!TTS.ok){if(cb)cb();return;}
+  var i=0;
+  (function nxt(){
+    if(i>=arr.length){if(cb)cb();return;}
+    speak(arr[i++],btn,function(){setTimeout(nxt,450);});
+  })();
+}
+function playQ(q,btn){if(Array.isArray(q.audio))speakSeq(q.audio,btn);else speak(q.audio,btn);}
+function normKo(s){return String(s).normalize('NFC').replace(/[\s.,!?~·]/g,'');}
+function fmtClock(s){s=Math.max(0,s);var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
+
+/* ---------- Moteur d’exercices (entraînement et examen) ---------- */
+var RUN=null;
+function stopRun(){
+  if(RUN&&RUN.timer)clearInterval(RUN.timer);
+  RUN=null;
+  try{if(TTS.ok)window.speechSynthesis.cancel();}catch(e){}
+}
+function runQuiz(box,qs,cfg){
+  stopRun();
+  var R=RUN={box:box,qs:qs,i:0,ok:0,res:[],cfg:cfg,done:false,left:cfg.seconds||0,timer:null};
+  if(cfg.seconds){
+    R.timer=setInterval(function(){
+      R.left--;
+      var t=$('#run-timer');if(t)t.textContent=fmtClock(R.left);
+      if(R.left<=0)finishRun(true);
+    },1000);
+  }
+  renderRun();
+}
+function finishRun(timeout){
+  var R=RUN;if(!R||R.done)return;
+  R.done=true;
+  if(R.timer)clearInterval(R.timer);
+  for(var k=R.res.length;k<R.qs.length;k++)R.res.push({q:R.qs[k],ok:false,given:null});
+  try{if(TTS.ok)window.speechSynthesis.cancel();}catch(e){}
+  touchDay();
+  R.cfg.onDone(R.res,!!timeout);
+}
+function renderRun(){
+  var R=RUN;if(!R||R.done)return;
+  var idx=R.i,q=R.qs[idx],cfg=R.cfg,exam=!!cfg.exam,box=R.box;
+  box.textContent='';
+  var plays=0,locked=false,chosen=-1;
+  var card=el('div','qcard');
+  var top=el('div','qtop');
+  top.appendChild(el('span',null,(cfg.title?cfg.title+' · ':'')+'Question '+(idx+1)+' / '+R.qs.length));
+  var right=el('span',null,'');
+  if(cfg.seconds){right.id='run-timer';right.textContent=fmtClock(R.left);}
+  else if(!exam)right.textContent='Score : '+R.ok;
+  top.appendChild(right);card.appendChild(top);
+  var bar=el('div','bar'),fill=el('i');fill.style.width=(idx/R.qs.length*100)+'%';bar.appendChild(fill);card.appendChild(bar);
+  card.appendChild(el('p','qlabel',q.label));
+
+  var trans=null;
+  if(q.audio){
+    var lim=exam?2:0;
+    var row=el('div','audiorow');
+    var pb=el('button','btn primary playbtn');pb.type='button';pb.innerHTML=SPK_ICON;
+    var cap=el('span',null,'Écouter');pb.appendChild(cap);
+    var upd=function(){
+      if(lim){cap.textContent=plays>=lim?'Écoutes épuisées':'Écouter ('+(lim-plays)+' restante'+(lim-plays>1?'s':'')+')';pb.disabled=plays>=lim;}
+      else cap.textContent=plays?'Réécouter':'Écouter';
+    };
+    upd();
+    pb.addEventListener('click',function(){if(lim&&plays>=lim)return;plays++;upd();playQ(q,pb);});
+    if(TTS.ok){
+      row.appendChild(pb);
+      if(!q.prompt)setTimeout(function(){if(RUN===R&&R.i===idx&&!locked&&!R.done){plays++;upd();playQ(q,pb);}},350);
+    }else row.appendChild(el('p','muted small','Synthèse vocale indisponible : le texte est affiché à la place.'));
+    card.appendChild(row);
+    if(!q.prompt){
+      trans=el('p','trans ko',q.text);
+      trans.hidden=TTS.ok;
+      if(exam&&TTS.ok)trans.hidden=true;
+      card.appendChild(trans);
+    }
+  }
+  if(q.prompt){
+    var pcls=q.blank?'qprompt sm':(q.pclass||'qprompt');
+    card.appendChild(el('div',pcls,q.prompt));
+  }
+  if(q.hint&&!q.blank)card.appendChild(el('p','muted','Indice : '+q.hint));
+  if(q.hint&&q.blank)card.appendChild(el('p','muted','Sens : '+q.hint));
+  if(q.question)card.appendChild(el('p','qquest',q.question));
+
+  var fb=el('p','fb pl');fb.setAttribute('aria-live','polite');
+  var nextBtn=el('button','btn primary',idx+1===R.qs.length?(exam?'Terminer la partie':'Voir le résultat'):(exam?'Suivant':'Question suivante'));
+  nextBtn.type='button';
+  var skip=null;
+  function commit(given,ok){
+    R.res.push({q:q,ok:ok,given:given});
+    if(ok)R.ok++;
+    if(q.item)noteResult(q.item,ok);
+  }
+  function go(){R.i++;if(R.i>=R.qs.length)finishRun(false);else renderRun();}
+
+  if(q.input){
+    var inp=el('input','dict');inp.type='text';inp.lang='ko';
+    inp.setAttribute('autocomplete','off');inp.setAttribute('autocapitalize','off');inp.setAttribute('autocorrect','off');inp.setAttribute('spellcheck','false');
+    inp.placeholder='Écris en hangeul';inp.setAttribute('aria-label','Réponse en hangeul');
+    var chk=el('button','btn primary','Vérifier');chk.type='button';
+    var irow=el('div','row');irow.appendChild(inp);irow.appendChild(chk);card.appendChild(irow);
+    var verify=function(){
+      if(locked)return;locked=true;
+      var ok=normKo(inp.value)===normKo(q.answerText);
+      commit(inp.value,ok);
+      inp.disabled=true;chk.disabled=true;
+      fb.className='fb pl '+(ok?'ok':'bad');
+      fb.textContent=(ok?'Bonne réponse. ':'Raté. Réponse : « '+q.answerText+' ». ')+q.explain;
+      if(right.id!=='run-timer'&&!exam)right.textContent='Score : '+R.ok;
+      if(trans)trans.hidden=false;
+      nextBtn.hidden=false;nextBtn.focus();
+    };
+    chk.addEventListener('click',verify);
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();verify();}});
+    nextBtn.hidden=true;
+    card.appendChild(fb);card.appendChild(nextBtn);
+    nextBtn.addEventListener('click',go);
+    setTimeout(function(){try{inp.focus();}catch(e){}},400);
+  }else{
+    var opts=el('div','opts');
+    var btns=[];
+    q.options.forEach(function(text,k){
+      var b=el('button','opt'+(q.koOpts?' ko':''),text);b.type='button';
+      btns.push(b);
+      b.addEventListener('click',function(){
+        if(locked)return;
+        if(exam){
+          chosen=k;btns.forEach(function(x,j){x.setAttribute('aria-pressed',String(j===k));x.classList.toggle('sel',j===k);});
+          nextBtn.disabled=false;return;
+        }
+        locked=true;
+        var ok=k===q.answer;
+        commit(text,ok);
+        btns.forEach(function(x,j){x.disabled=true;if(j===q.answer)x.classList.add('ok');});
+        if(!ok)b.classList.add('bad');
+        fb.className='fb pl '+(ok?'ok':'bad');
+        fb.textContent=(ok?'Bonne réponse. ':'Raté. ')+q.explain;
+        right.textContent='Score : '+R.ok;
+        if(trans)trans.hidden=false;
+        nextBtn.hidden=false;nextBtn.focus();
+      });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    if(exam){
+      nextBtn.disabled=true;
+      nextBtn.addEventListener('click',function(){
+        if(chosen<0)return;locked=true;
+        commit(q.options[chosen],chosen===q.answer);go();
+      });
+      skip=el('button','btn','Passer');skip.type='button';
+      skip.addEventListener('click',function(){locked=true;commit(null,false);go();});
+      var arow=el('div','row');arow.appendChild(nextBtn);arow.appendChild(skip);
+      card.appendChild(arow);
+    }else{
+      nextBtn.hidden=true;
+      nextBtn.addEventListener('click',go);
+      card.appendChild(fb);card.appendChild(nextBtn);
+    }
+  }
+  box.appendChild(card);
+}
+function showRunResult(box,res,opts){
+  var n=res.length,ok=res.filter(function(r){return r.ok;}).length;
+  var card=el('div','qcard');
+  card.appendChild(el('p','qlabel','Résultat'));
+  card.appendChild(el('p','score',ok+' / '+n));
+  card.appendChild(el('p',null,ok===n?'Sans faute.':(ok>=Math.ceil(n*0.7)?'Solide. Quelques points à revoir.':'Continue : la répétition fait le travail.')));
+  var bad=res.filter(function(r){return !r.ok;});
+  if(bad.length){
+    card.appendChild(el('p','qlabel','À revoir'));
+    var ul=el('ul','pl');
+    bad.forEach(function(r){
+      var li=el('li',null,r.q.explain);
+      if(r.q.audio)addSpk(li,Array.isArray(r.q.audio)?r.q.audio.join(' '):r.q.audio,'Écouter','inl');
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+  }
+  var row=el('div','row');
+  var again=el('button','btn primary','Rejouer');again.type='button';again.addEventListener('click',opts.again);row.appendChild(again);
+  var back=el('button','btn','Changer d’exercice');back.type='button';back.addEventListener('click',opts.back);row.appendChild(back);
+  card.appendChild(row);box.appendChild(card);
+}
+
+/* ---------- S’entraîner ---------- */
+var P={kind:'ecoute',sub:'mix',rsub:'mix',theme:'all',dmode:'type'};
+var P_KINDS=[['ecoute','Écoute'],['lecture','Lecture'],['dictee','Dictée'],['erreurs','Mes erreurs']];
+var P_SUBS=[['mix','Mélange'],['mots','Mots'],['phrases','Phrases'],['dialogues','Dialogues'],['prix','Prix'],['heures','Heures'],['dates','Dates'],['quantites','Quantités']];
+var P_RSUBS=[['mix','Mélange'],['textes','Textes courts'],['trous','Phrases à trous']];
+function chipRow(list,cur,onPick){
+  var chips=el('div','chips');
+  list.forEach(function(m){
+    var b=el('button','chip txt',m[1]);b.type='button';b.setAttribute('aria-pressed',String(cur===m[0]));
+    b.addEventListener('click',function(){onPick(m[0]);});chips.appendChild(b);
+  });
+  return chips;
+}
+function themeField(onPick){
+  var f=el('div','field');var lab=el('label',null,'Thème des mots');lab.setAttribute('for','prat-theme');
+  var sel=el('select');sel.id='prat-theme';
+  var o0=el('option',null,'Tous les thèmes');o0.value='all';sel.appendChild(o0);
+  THEMES.forEach(function(t){var o=el('option',null,t.title);o.value=t.id;sel.appendChild(o);});
+  sel.value=P.theme;sel.addEventListener('change',function(){P.theme=sel.value;});
+  f.appendChild(lab);f.appendChild(sel);return f;
+}
+function renderPratique(){
+  stopRun();
+  var box=$('#prat-box');box.textContent='';
+  var s=el('div','setup');
+  var f1=el('div','field');f1.appendChild(el('span','lbl','Compétence'));
+  f1.appendChild(chipRow(P_KINDS,P.kind,function(k){P.kind=k;renderPratique();}));s.appendChild(f1);
+  var go=el('button','btn primary','Commencer (10 questions)');go.type='button';
+  if(P.kind==='ecoute'){
+    var f2=el('div','field');f2.appendChild(el('span','lbl','Type d’écoute'));
+    f2.appendChild(chipRow(P_SUBS,P.sub,function(k){P.sub=k;renderPratique();}));s.appendChild(f2);
+    if(P.sub==='mots'||P.sub==='mix')s.appendChild(themeField());
+    s.appendChild(el('p','muted small','Tu entends l’audio sans le texte, puis tu choisis la bonne réponse. Prix, heures, dates et quantités sont générés au hasard : tu ne peux pas les apprendre par cœur, il faut vraiment comprendre les nombres.'));
+    go.addEventListener('click',function(){startPrat(genListen(P.sub,10,P.theme),'ecoute');});
+  }else if(P.kind==='lecture'){
+    var f3=el('div','field');f3.appendChild(el('span','lbl','Type de lecture'));
+    f3.appendChild(chipRow(P_RSUBS,P.rsub,function(k){P.rsub=k;renderPratique();}));s.appendChild(f3);
+    s.appendChild(el('p','muted small','Comme à l’examen : un petit texte (panneau, message, annonce) avec une question, ou une phrase à compléter.'));
+    go.addEventListener('click',function(){startPrat(genRead(P.rsub,10),'lecture');});
+  }else if(P.kind==='dictee'){
+    var f4=el('div','field');f4.appendChild(el('span','lbl','Réponse'));
+    f4.appendChild(chipRow([['type','Écrire en hangeul'],['choose','Choisir parmi 4']],P.dmode,function(k){P.dmode=k;renderPratique();}));s.appendChild(f4);
+    s.appendChild(themeField());
+    s.appendChild(el('p','muted small','Tu écoutes un mot, tu l’écris. Il faut un clavier coréen sur ton appareil (Mac : Réglages, Clavier, Sources de saisie, Coréen 2 jeux).'));
+    go.addEventListener('click',function(){
+      var pool=wordPool(P.theme),picked=shuffle(pool).slice(0,10);
+      startPrat(picked.map(function(x){return qDict(x,P.dmode,pool);}),'dictee');
+    });
+  }else{
+    var w=wrongItems();
+    s.appendChild(el('p',null,w.length?w.length+' mot'+(w.length>1?'s':'')+' à retravailler (tes erreurs récentes, tous exercices confondus).':'Aucune erreur en attente. Les mots que tu rates dans les exercices apparaissent ici jusqu’à ce que tu les réussisses.'));
+    if(w.length){
+      go.textContent='Réviser mes erreurs ('+Math.min(10,w.length)+' questions)';
+      go.addEventListener('click',function(){startPrat(shuffle(w).slice(0,10).map(qErr),'erreurs');});
+    }else go.hidden=true;
+  }
+  s.appendChild(go);box.appendChild(s);
+}
+function startPrat(qs,kind){
+  var box=$('#prat-box');
+  runQuiz(box,qs,{exam:false,onDone:function(res){
+    showRunResult(box,res,{again:function(){
+      if(kind==='ecoute')startPrat(genListen(P.sub,10,P.theme),kind);
+      else if(kind==='lecture')startPrat(genRead(P.rsub,10),kind);
+      else if(kind==='dictee'){var pool=wordPool(P.theme);startPrat(shuffle(pool).slice(0,10).map(function(x){return qDict(x,P.dmode,pool);}),kind);}
+      else{var w=wrongItems();if(w.length)startPrat(shuffle(w).slice(0,10).map(qErr),kind);else renderPratique();}
+    },back:renderPratique});
+  }});
+}
+
+/* ---------- Examen blanc ---------- */
+function topikLevel(t){return t>=140?'niveau 2 (≥ 140)':(t>=80?'niveau 1 (80 à 139)':'sous le niveau 1 (< 80)');}
+function renderExamen(){
+  stopRun();
+  var box=$('#exam-box');box.textContent='';
+  var s=el('div','setup');
+  s.appendChild(el('p',null,'Le TOPIK I réel compte 70 questions à choix multiple : 30 d’écoute (40 min) puis 40 de lecture (60 min). Ici, c’est la même structure avec des questions rédigées pour ce cahier.'));
+  var ul=el('ul');
+  ['Pas de correction pendant l’épreuve : tu vois tout à la fin.','Chaque audio ne s’écoute que 2 fois, comme à l’examen.','Une partie se termine quand le temps est écoulé : les questions sans réponse comptent faux.','Chaque partie vaut 100 points (200 au total).'].forEach(function(t){ul.appendChild(el('li',null,t));});
+  s.appendChild(ul);
+  s.appendChild(el('p','note small','Le score est indicatif : le vrai TOPIK utilise d’autres questions et sa propre calibration. Vise 140 ou plus ici pour te donner une marge. Écoute avec la synthèse vocale de ton appareil, pas avec des voix enregistrées.'));
+  var last=store.exams[store.exams.length-1];
+  if(last)s.appendChild(el('p','muted small','Dernier examen : '+last.tot+' / 200 ('+topikLevel(last.tot)+').'));
+  var row=el('div','row');
+  var full=el('button','btn primary','Examen complet (30 + 40 questions, 100 min)');full.type='button';
+  var mini=el('button','btn','Mini-examen (15 + 20 questions, 50 min)');mini.type='button';
+  full.addEventListener('click',function(){startExam(true);});
+  mini.addEventListener('click',function(){startExam(false);});
+  row.appendChild(full);row.appendChild(mini);s.appendChild(row);box.appendChild(s);
+}
+function startExam(full){
+  var nL=full?30:15,nR=full?40:20,sL=full?2400:1200,sR=full?3600:1800;
+  var box=$('#exam-box');
+  var secL=genListen('mix',nL,'all'),secR=genRead('mix',nR);
+  runQuiz(box,secL,{exam:true,title:'Écoute',seconds:sL,onDone:function(resL,toL){
+    box.textContent='';
+    var c=el('div','qcard');
+    c.appendChild(el('p','qlabel','Partie écoute terminée'));
+    c.appendChild(el('p',null,toL?'Le temps est écoulé.':'Passe à la partie lecture.'));
+    c.appendChild(el('p','muted small','La lecture dure '+(sR/60)+' minutes. Le chronomètre démarre au clic.'));
+    var b=el('button','btn primary','Commencer la lecture');b.type='button';
+    b.addEventListener('click',function(){
+      runQuiz(box,secR,{exam:true,title:'Lecture',seconds:sR,onDone:function(resR){finishExam(box,resL,resR,full);}});
+    });
+    c.appendChild(b);box.appendChild(c);
+  }});
+}
+function finishExam(box,resL,resR,full){
+  var okL=resL.filter(function(r){return r.ok;}).length,okR=resR.filter(function(r){return r.ok;}).length;
+  var l=Math.round(okL*100/resL.length),r=Math.round(okR*100/resR.length),tot=l+r;
+  store.exams.push({t:Date.now(),l:l,r:r,tot:tot,full:!!full});
+  if(store.exams.length>30)store.exams.shift();
+  save();
+  box.textContent='';
+  var c=el('div','qcard');
+  c.appendChild(el('p','qlabel','Résultat de l’examen blanc'));
+  c.appendChild(el('p','score',tot+' / 200'));
+  c.appendChild(el('p',null,'Estimation : '+topikLevel(tot)+'.'));
+  var t=el('div','tbl-wrap'),tb=el('table'),th=el('thead'),tr=el('tr');
+  ['Partie','Bonnes réponses','Points'].forEach(function(h){tr.appendChild(el('th',null,h));});
+  th.appendChild(tr);tb.appendChild(th);
+  var body=el('tbody');
+  [['Écoute',okL+' / '+resL.length,l+' / 100'],['Lecture',okR+' / '+resR.length,r+' / 100']].forEach(function(rw){
+    var x=el('tr');rw.forEach(function(v){x.appendChild(el('td',null,v));});body.appendChild(x);
+  });
+  tb.appendChild(body);t.appendChild(tb);c.appendChild(t);
+  var weak=l<r?'l’écoute':'la lecture';
+  if(Math.abs(l-r)>=10)c.appendChild(el('p','muted','Point faible : '+weak+'. Travaille-la dans S’entraîner.'));
+  var bad=resL.concat(resR).filter(function(x){return !x.ok;});
+  if(bad.length){
+    var d=el('details');d.appendChild(el('summary',null,'Voir les '+bad.length+' erreurs corrigées'));
+    var ul=el('ul','pl');
+    bad.forEach(function(x){
+      var li=el('li',null,x.q.explain);
+      if(x.q.prompt&&x.q.pclass==='passage')li.textContent=x.q.explain;
+      ul.appendChild(li);
+    });
+    d.appendChild(ul);c.appendChild(d);
+  }
+  var row=el('div','row');
+  var again=el('button','btn primary','Nouvel examen');again.type='button';again.addEventListener('click',renderExamen);row.appendChild(again);
+  c.appendChild(row);box.appendChild(c);
+}
+
+/* ---------- Réviser (répétition espacée, boîtes de Leitner) ---------- */
+var SR_INT=[0,1,3,7,14,30,60];
+var SR={q:[],n:0,done:0,again:0,cur:null,shown:false};
+function srsCounts(){
+  var t=todayNum(),due=0,fresh=0;
+  ALL.forEach(function(x){
+    var s=store.srs[x.id];
+    if(s){if(s.d<=t)due++;}
+    else if(!store.known[x.id])fresh++;
+  });
+  var used=store.newToday.d===t?store.newToday.n:0;
+  return {due:due,fresh:fresh,quota:Math.max(0,10-used)};
+}
+function srsBuild(){
+  var t=todayNum(),due=[],fresh=[];
+  ALL.forEach(function(x){
+    var s=store.srs[x.id];
+    if(s){if(s.d<=t)due.push(x);}
+    else if(!store.known[x.id])fresh.push(x);
+  });
+  due.sort(function(a,b){return store.srs[a.id].d-store.srs[b.id].d;});
+  var c=srsCounts();
+  return due.slice(0,25).concat(fresh.slice(0,c.quota));
+}
+function renderReviser(){
+  stopRun();
+  var box=$('#srs-box');box.textContent='';
+  var c=srsCounts(),s=el('div','setup');
+  var tiles=el('div','tiles');
+  [[c.due,'à réviser'],[Math.min(c.quota,c.fresh),'nouveaux aujourd’hui'],[knownTotal(),'mots maîtrisés']].forEach(function(t){
+    var d=el('div','tile');d.appendChild(el('b',null,String(t[0])));d.appendChild(el('span',null,t[1]));tiles.appendChild(d);
+  });
+  s.appendChild(tiles);
+  var q=srsBuild();
+  if(q.length){
+    s.appendChild(el('p',null,'Séance du jour : '+q.length+' carte'+(q.length>1?'s':'')+', une dizaine de minutes.'));
+    var go=el('button','btn primary','Commencer la séance');go.type='button';
+    go.addEventListener('click',function(){SR.q=q.slice();SR.n=q.length;SR.done=0;SR.again=0;srsNext();});
+    s.appendChild(go);
+  }else{
+    s.appendChild(el('p',null,'Rien à réviser pour aujourd’hui. Reviens demain, ou entraîne-toi dans S’entraîner.'));
+  }
+  s.appendChild(el('p','muted small','Chaque mot revient après 1, 3, 7, 14, 30 puis 60 jours si tu le réussis. Si tu le rates, il revient tout de suite. Un mot est « maîtrisé » à partir du 3e palier.'));
+  box.appendChild(s);
+}
+function srsNext(){
+  var box=$('#srs-box');box.textContent='';
+  if(!SR.q.length){srsEnd();return;}
+  var x=SR.q.shift();SR.cur=x;SR.shown=false;
+  var s=store.srs[x.id];
+  var rev=s&&s.b>=2&&Math.random()<0.5;
+  var card=el('div','qcard');
+  var top=el('div','qtop');top.appendChild(el('span',null,'Carte '+(SR.done+1)+' / '+(SR.n+SR.again)));top.appendChild(el('span',null,s?'Palier '+s.b:'Nouveau'));
+  card.appendChild(top);
+  var bar=el('div','bar'),fill=el('i');fill.style.width=(SR.done/(SR.n+SR.again)*100)+'%';bar.appendChild(fill);card.appendChild(bar);
+  card.appendChild(el('p','qlabel',rev?'Comment dit-on en coréen ?':'Que signifie ce mot ?'));
+  var front=el('div','kr');
+  front.appendChild(el('p','qprompt'+(rev?' fr':''),rev?x.fr:x.ko));
+  if(!rev){addSpk(front,x.ko,'Écouter '+x.ko);}
+  card.appendChild(front);
+  var back=el('div','srs-back');back.hidden=true;
+  var bk=el('div','kr');
+  bk.appendChild(el('p','qprompt'+(rev?'':' fr'),rev?x.ko:x.fr));
+  if(rev)addSpk(bk,x.ko,'Écouter '+x.ko);
+  back.appendChild(bk);back.appendChild(el('p','rom',x.ro));
+  var grades=el('div','grades');
+  var t=todayNum();
+  var b0=s?s.b:0;
+  [['again','Raté','tout de suite'],['hard','Difficile','1 j'],['good','Bien',SR_INT[Math.min(b0+1,6)]+' j'],['easy','Facile',SR_INT[Math.min(b0+2,6)]+' j']].forEach(function(g){
+    var b=el('button','grade '+g[0]);b.type='button';b.appendChild(el('b',null,g[1]));b.appendChild(el('span',null,g[2]));
+    b.addEventListener('click',function(){srsGrade(x,g[0]);});grades.appendChild(b);
+  });
+  back.appendChild(grades);
+  var show=el('button','btn primary','Afficher la réponse');show.type='button';
+  show.addEventListener('click',function(){
+    SR.shown=true;back.hidden=false;show.hidden=true;
+    if(rev)speak(x.ko,null);
+  });
+  card.appendChild(show);card.appendChild(back);box.appendChild(card);
+  if(!rev)setTimeout(function(){if(SR.cur===x&&!SR.shown)speak(x.ko,null);},300);
+}
+function srsGrade(x,g){
+  var t=todayNum(),s=store.srs[x.id];
+  if(!s){
+    s={b:0,d:t};
+    if(store.newToday.d!==t)store.newToday={d:t,n:0};
+    store.newToday.n++;
+  }
+  if(g==='again'){s.b=0;s.d=t;SR.q.push(x);SR.again++;noteResult(x,false);}
+  else{
+    if(g==='hard'){s.d=t+1;}
+    else{s.b=Math.min(6,s.b+(g==='easy'?2:1));s.d=t+SR_INT[s.b];}
+    if(store.wrong[x.id]){delete store.wrong[x.id];}
+    touchDay();
+  }
+  store.srs[x.id]=s;save();
+  SR.done++;
+  srsNext();
+}
+function srsEnd(){
+  var box=$('#srs-box');box.textContent='';
+  var card=el('div','qcard');
+  card.appendChild(el('p','qlabel','Séance terminée'));
+  card.appendChild(el('p','score',String(SR.n)));
+  card.appendChild(el('p',null,'carte'+(SR.n>1?'s':'')+' revue'+(SR.n>1?'s':'')+'. Série en cours : '+streak()+' jour'+(streak()>1?'s':'')+'.'));
+  var row=el('div','row');
+  var b=el('button','btn primary','Retour');b.type='button';b.addEventListener('click',renderReviser);row.appendChild(b);
+  card.appendChild(row);box.appendChild(card);
+}
+
+/* ---------- Progrès ---------- */
+function meterRow(label,val,max){
+  var r=el('div','mrow');r.appendChild(el('span','mlab',label));
+  var m=el('div','meter');var i=el('i');i.style.width=(max?Math.min(100,val/max*100):0)+'%';m.appendChild(i);r.appendChild(m);
+  r.appendChild(el('span','mval',val+' / '+max));return r;
+}
+function renderProgress(){
+  stopRun();
+  var box=$('#prog-box');box.textContent='';
+  var total=ALL.length,known=knownTotal(),goal=800;
+  var tiles=el('div','tiles');
+  [[known,'mots maîtrisés'],[streak(),'jours d’affilée'],[store.exams.length,'examens blancs'],[wrongItems().length,'erreurs à revoir']].forEach(function(t){
+    var d=el('div','tile');d.appendChild(el('b',null,String(t[0])));d.appendChild(el('span',null,t[1]));tiles.appendChild(d);
+  });
+  box.appendChild(tiles);
+  var s1=el('section','sec');s1.appendChild(el('h2',null,'Vocabulaire'));
+  s1.appendChild(meterRow('Objectif TOPIK I (≈ 800 mots)',Math.min(known,goal),goal));
+  s1.appendChild(el('p','muted small','Le programme du TOPIK I compte environ 800 mots. Ce cahier en propose '+total+'. Un mot est maîtrisé si tu l’as coché ou s’il a atteint le 3e palier en révision.'));
+  box.appendChild(s1);
+  var s2=el('section','sec');s2.appendChild(el('h2',null,'Régularité'));
+  var days=el('div','days');
+  var t0=todayNum();
+  for(var k=27;k>=0;k--){
+    var on=store.days.indexOf(t0-k)>=0;
+    var d=el('i',on?'on':'');d.title=on?'Étudié':'';days.appendChild(d);
+  }
+  s2.appendChild(days);s2.appendChild(el('p','muted small','28 derniers jours (le plus récent à droite). Une case pleine = au moins un exercice ce jour-là.'));
+  box.appendChild(s2);
+  var s3=el('section','sec');s3.appendChild(el('h2',null,'Par thème'));
+  var ml=el('div','mlist');
+  THEMES.forEach(function(th){
+    var n=0;th.items.forEach(function(x){if(isKnown(x))n++;});
+    ml.appendChild(meterRow(th.title,n,th.items.length));
+  });
+  s3.appendChild(ml);box.appendChild(s3);
+  var s4=el('section','sec');s4.appendChild(el('h2',null,'Examens blancs'));
+  if(store.exams.length){
+    var w=el('div','tbl-wrap'),tb=el('table'),th=el('thead'),tr=el('tr');
+    ['Date','Écoute','Lecture','Total','Estimation'].forEach(function(h){tr.appendChild(el('th',null,h));});
+    th.appendChild(tr);tb.appendChild(th);var body=el('tbody');
+    store.exams.slice(-8).reverse().forEach(function(e){
+      var x=el('tr');
+      [new Date(e.t).toLocaleDateString('fr-FR')+(e.full?'':' (mini)'),e.l+' / 100',e.r+' / 100',e.tot+' / 200',topikLevel(e.tot)].forEach(function(v){x.appendChild(el('td',null,v));});
+      body.appendChild(x);
+    });
+    tb.appendChild(body);w.appendChild(tb);s4.appendChild(w);
+  }else s4.appendChild(el('p','muted','Aucun examen blanc passé pour l’instant.'));
+  box.appendChild(s4);
+  var s5=el('section','sec');
+  var rb=el('button','btn','Effacer toute ma progression');rb.type='button';
+  var conf=el('div','row');conf.hidden=true;
+  var yes=el('button','btn primary','Oui, tout effacer');yes.type='button';
+  var no=el('button','btn','Annuler');no.type='button';
+  conf.appendChild(el('span',null,'Cette action est définitive.'));conf.appendChild(yes);conf.appendChild(no);
+  rb.addEventListener('click',function(){rb.hidden=true;conf.hidden=false;});
+  no.addEventListener('click',function(){rb.hidden=false;conf.hidden=true;});
+  yes.addEventListener('click',function(){
+    var keepVoice=store.voice,keepRate=store.rate;
+    store.known={};store.best={};store.srs={};store.wrong={};store.days=[];store.exams=[];store.newToday={d:0,n:0};
+    save();renderProgress();
+  });
+  s5.appendChild(rb);s5.appendChild(conf);box.appendChild(s5);
+}
+
+/* ---------- Fiches de grammaire (rendues depuis FICHES) ---------- */
+function renderFiches(){
+  var box=$('#fiches-box');if(!box)return;
+  FICHES.forEach(function(f){
+    var a=el('article','fiche');a.appendChild(el('h3',null,f.t));
+    a.appendChild(el('p','small',f.rule));
+    f.ex.forEach(function(e){
+      var d=el('div','ex');
+      d.appendChild(el('span','ko',e[0]));d.appendChild(el('span','rom',e[2]));d.appendChild(el('span',null,e[1]));
+      a.appendChild(d);
+    });
+    box.appendChild(a);
+  });
+}
+
 /* ---------- Navigation par onglets ---------- */
-var VIEWS=['hangeul','grammaire','politesse','vocabulaire','quiz'];
+var VIEWS=['hangeul','grammaire','politesse','vocabulaire','reviser','pratique','examen','progres','quiz'];
+var ENTER={reviser:function(){renderReviser();},pratique:function(){renderPratique();},examen:function(){renderExamen();},progres:function(){renderProgress();}};
 function route(scroll){
   var h=(location.hash||'').replace('#','');
   if(VIEWS.indexOf(h)<0)h='hangeul';
@@ -1188,9 +1951,11 @@ function route(scroll){
   $$('.tab').forEach(function(a){
     if(a.dataset.v===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
   });
+  if(ENTER[h])ENTER[h]();else stopRun();
   if(scroll)window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',function(){route(true);});
+$$('.tab').forEach(function(a){a.addEventListener('click',function(){if(location.hash==='#'+a.dataset.v)route(true);});});
 
 /* ---------- Démarrage ---------- */
 initVoice();
@@ -1204,10 +1969,12 @@ buildWords();
 buildVerbs();
 buildScen();
 buildVocab();
+renderFiches();
 renderSetup();
 decorate();
 route(false);
 })();
 </script>
+
 </body>
 </html>
