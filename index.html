@@ -213,6 +213,8 @@ td .ko{font-size:1.15rem}
 .voicebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}
 .voicebar .vlab{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 #voice-note{margin-top:10px}
+.vwrap{display:flex;align-items:center;gap:8px;min-width:0}
+.vwrap select{max-width:100%;padding:8px 10px;font-size:.88rem}
 .spk{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;width:30px;height:30px;padding:0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--accent);cursor:pointer;vertical-align:middle;font-size:.88rem;font-weight:500;line-height:1}
 .spk svg{width:16px;height:16px}
 .spk:hover{border-color:var(--accent)}
@@ -261,7 +263,7 @@ select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backgro
   <div class="inner">
     <h1>Cahier de coréen<span>한국어</span></h1>
     <p>Alphabet, grammaire, niveaux de politesse, vocabulaire et quiz. Tout est expliqué pour un francophone, avec lecture vocale de la prononciation.</p>
-    <div class="voicebar" id="voicebar"><span class="vlab">Lecture vocale</span><div class="seg" role="group" aria-label="Vitesse de lecture"><button type="button" id="rate-slow" aria-pressed="true">Lente</button><button type="button" id="rate-norm" aria-pressed="false">Normale</button></div></div>
+    <div class="voicebar" id="voicebar"><span class="vlab">Lecture vocale</span><div class="seg" role="group" aria-label="Vitesse de lecture"><button type="button" id="rate-slow" aria-pressed="true">Lente</button><button type="button" id="rate-norm" aria-pressed="false">Normale</button></div><div class="vwrap" id="voice-wrap" hidden><label class="vlab" for="voice-sel">Voix</label><select id="voice-sel"></select></div></div>
     <p class="note small" id="voice-note" hidden></p>
   </div>
 </header>
@@ -547,20 +549,39 @@ var KEY='cahier-coreen-v1';
 var store={known:{},best:{}};
 try{
   var raw=localStorage.getItem(KEY);
-  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){store.known=p.known||{};store.best=p.best||{};if(p.rate==='norm')store.rate='norm';}}
+  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){store.known=p.known||{};store.best=p.best||{};if(p.rate==='norm')store.rate='norm';if(typeof p.voice==='string')store.voice=p.voice;}}
 }catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 
 /* ---------- Lecture vocale (synthèse du navigateur) ---------- */
 var SPK_ICON='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.2h2.3L8 3.5v9L4.8 9.8H2.5z"/><path d="M10.6 5.6a3.4 3.4 0 0 1 0 4.8"/><path d="M12.4 3.8a6 6 0 0 1 0 8.4"/></svg>';
-var TTS={ok:('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window),voice:null,btn:null,id:0,late:false};
+var TTS={ok:('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window),voice:null,list:[],btn:null,id:0,late:false};
 function ttsRate(){return store.rate==='norm'?1:0.8;}
+/* Classe les voix : premium, améliorée, Siri ou réseau avant les voix compactes */
+function voiceScore(v){
+  var n=(v.name||'').toLowerCase(),sc=0;
+  if(/premium|enhanced|am[ée]lior|siri|neural|natural/.test(n))sc+=4;
+  if(/google/.test(n))sc+=2;
+  if(v.localService)sc+=1;
+  return sc;
+}
+function fillVoiceSelect(){
+  var wrap=$('#voice-wrap'),sel=$('#voice-sel');if(!wrap||!sel)return;
+  sel.textContent='';
+  TTS.list.forEach(function(v){var o=el('option',null,v.name);o.value=v.name;sel.appendChild(o);});
+  if(TTS.voice)sel.value=TTS.voice.name;
+  wrap.hidden=TTS.list.length<2;
+}
 function pickVoice(){
   if(!TTS.ok)return;
   var vs=[];try{vs=window.speechSynthesis.getVoices()||[];}catch(e){}
   var ko=vs.filter(function(v){return /^ko([-_]|$)/i.test(v.lang);});
-  var loc=ko.filter(function(v){return v.localService;});
-  TTS.voice=loc[0]||ko[0]||null;
+  ko.sort(function(a,b){return voiceScore(b)-voiceScore(a);});
+  TTS.list=ko;
+  var chosen=null;
+  if(store.voice){for(var i=0;i<ko.length;i++){if(ko[i].name===store.voice){chosen=ko[i];break;}}}
+  TTS.voice=chosen||ko[0]||null;
+  fillVoiceSelect();
   paintVoiceNote();
 }
 function paintVoiceNote(){
@@ -579,6 +600,7 @@ function initVoice(){
   $('#rate-slow').addEventListener('click',function(){store.rate='slow';save();paintRate();});
   $('#rate-norm').addEventListener('click',function(){store.rate='norm';save();paintRate();});
   paintRate();
+  $('#voice-sel').addEventListener('change',function(){store.voice=this.value;save();pickVoice();speak('안녕하세요',null);});
   try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
   pickVoice();
   setTimeout(function(){TTS.late=true;paintVoiceNote();},1500);
