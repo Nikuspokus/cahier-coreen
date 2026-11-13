@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<title>Cahier de coréen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Concept : un cahier d’écriture coréen (cases carrées, repères en croix).
+   Indigo profond pour la structure, rouge dancheong pour l’insistance, vert pour le juste.
+   Une page, cinq onglets, chaque exercice est une case à remplir. */
+:root{
+  --font-display:'Space Grotesk','Inter',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-ko:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Noto Sans CJK KR',sans-serif;
+  --bg:#F3F5FA;
+  --surface:#FFFFFF;
+  --surface-2:#E8ECF6;
+  --fg:#151A2E;
+  --muted:#586180;
+  --line:#D3D9EA;
+  --accent:#2C3FA0;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#E0E5FA;
+  --red:#BF3328;
+  --red-soft:#FBE4E1;
+  --green:#1D7655;
+  --green-soft:#DCF2E8;
+  --green-ink:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1220;
+    --surface:#171C31;
+    --surface-2:#20263F;
+    --fg:#E7EAF6;
+    --muted:#9AA3C4;
+    --line:#2D3556;
+    --accent:#8EA0FF;
+    --accent-ink:#0E1220;
+    --accent-soft:#232B55;
+    --red:#FF8077;
+    --red-soft:#3A1E22;
+    --green:#67D9A6;
+    --green-soft:#15332A;
+    --green-ink:#0E1220;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1220;
+  --surface:#171C31;
+  --surface-2:#20263F;
+  --fg:#E7EAF6;
+  --muted:#9AA3C4;
+  --line:#2D3556;
+  --accent:#8EA0FF;
+  --accent-ink:#0E1220;
+  --accent-soft:#232B55;
+  --red:#FF8077;
+  --red-soft:#3A1E22;
+  --green:#67D9A6;
+  --green-soft:#15332A;
+  --green-ink:#0E1220;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:920px;margin:0 auto}
+.ko{font-family:var(--font-ko)}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p,ul,ol,dl,dd{margin:0}
+ul,ol{padding-left:1.2em}
+
+/* Masthead + onglets */
+.masthead{padding-block:28px 14px}
+.masthead h1{font:700 clamp(1.8rem,7vw,2.6rem)/1.1 var(--font-display);letter-spacing:-0.01em;text-wrap:balance}
+.masthead h1 span{font-family:var(--font-ko);font-weight:500;color:var(--accent);margin-left:.35em}
+.masthead p{margin-top:8px;color:var(--muted);max-width:56ch}
+.tabbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);text-decoration:none;font-weight:500;font-size:.9rem}
+.tab[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+main{padding-block:26px 56px}
+.view{display:flex;flex-direction:column;gap:40px}
+.sec{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sec>h2{font:700 1.4rem/1.25 var(--font-display);text-wrap:balance}
+.eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lead{max-width:62ch}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.def{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);font-size:.9rem;max-width:62ch}
+.def b{color:var(--fg);font-weight:600}
+.note{padding:12px 14px;border-radius:10px;background:var(--accent-soft);font-size:.9rem;max-width:68ch}
+
+/* Alphabet */
+.grid-letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+.letter{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.letter .jm{font:500 2rem/1.1 var(--font-ko)}
+.letter .rm{font-size:.75rem;color:var(--muted)}
+.letter[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.detail{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;margin-top:10px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.detail p+p{margin-top:2px}
+.cell{display:grid;place-items:center;aspect-ratio:1;width:132px;max-width:100%;border:2px solid var(--accent);border-radius:4px;background:
+  linear-gradient(to right,transparent calc(50% - .5px),var(--line) calc(50% - .5px),var(--line) calc(50% + .5px),transparent calc(50% + .5px)),
+  linear-gradient(to bottom,transparent calc(50% - .5px),var(--line) calc(50% - .5px),var(--line) calc(50% + .5px),transparent calc(50% + .5px)),
+  var(--surface);
+  font:500 76px/1 var(--font-ko);color:var(--fg)}
+.cell.sm{width:84px;font-size:48px}
+.sub{font:600 .95rem/1.3 var(--font-display);margin:18px 0 8px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td .ko{font-size:1.15rem}
+.rom{color:var(--muted);font-size:.85rem}
+
+.composer{display:flex;flex-direction:column;gap:16px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.comp-out{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.comp-info{display:flex;flex-direction:column;gap:4px;min-width:0}
+.comp-eq{font-size:1.25rem}
+.comp-read{color:var(--muted)}
+.comp-read strong{color:var(--fg);font-size:1.15rem}
+.comp-row h3{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-width:42px;height:42px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font:500 1.15rem var(--font-ko)}
+.chip.txt{font:500 .9rem var(--font-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.word{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:84px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left}
+.word .w{font:500 1.35rem/1.2 var(--font-ko)}
+.word .r{font-size:.82rem;color:var(--muted);visibility:hidden}
+.word.open{background:var(--accent-soft);border-color:var(--accent)}
+.word.open .r{visibility:visible}
+
+/* Grammaire */
+.facts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));list-style:none;padding:0}
+.facts li{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:.92rem}
+.gloss{display:flex;flex-wrap:wrap;gap:12px 16px}
+.g{display:flex;flex-direction:column;gap:2px;padding-bottom:6px;border-bottom:3px solid var(--accent)}
+.g .ko{font-size:1.5rem;line-height:1.25}
+.g small{color:var(--muted);font-size:.8rem}
+.g.o{border-color:var(--red)}
+.g.v{border-color:var(--green)}
+.g.p{border-color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;margin-right:6px;vertical-align:middle;background:var(--accent)}
+.legend i.o{background:var(--red)}.legend i.v{background:var(--green)}.legend i.p{background:var(--muted)}
+.rules{display:grid;gap:8px;counter-reset:r;list-style:none;padding:0}
+.rules li{counter-increment:r;padding:10px 14px 10px 44px;position:relative;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:.93rem}
+.rules li::before{content:counter(r);position:absolute;left:12px;top:10px;width:22px;height:22px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font:600 .8rem/22px var(--font-display);text-align:center}
+.rules .ko{font-weight:500}
+.conj{display:grid;gap:8px}
+.conj-row{display:grid;grid-template-columns:minmax(96px,128px) minmax(0,1fr);gap:4px 14px;align-items:baseline;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.conj-row .lab{font-size:.8rem;color:var(--muted)}
+.conj-row .ko{font-size:1.4rem;line-height:1.3}
+.conj-head{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.conj-head .ko{font-size:1.6rem;font-weight:500}
+.fiches{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.fiche{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.fiche h3{font:600 1rem/1.3 var(--font-display)}
+.ex{display:flex;flex-direction:column;padding-left:10px;border-left:3px solid var(--line)}
+.ex .ko{font-size:1.15rem}
+.ex .rom{line-height:1.3}
+
+/* Politesse */
+.scen{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.badge{display:inline-block;align-self:flex-start;padding:3px 10px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:.8rem;font-weight:600}
+.scen-ko{font:500 1.6rem/1.3 var(--font-ko)}
+
+/* Vocabulaire */
+.themes{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.themes::-webkit-scrollbar{display:none}
+.theme{flex:0 0 auto;display:flex;gap:8px;align-items:baseline;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:.9rem;white-space:nowrap}
+.theme em{font-style:normal;font-size:.75rem;color:var(--muted)}
+.theme[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.theme[aria-pressed="true"] em{color:var(--accent-ink);opacity:.85}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{padding:8px 12px;border:0;background:transparent;cursor:pointer;font-size:.88rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:.9rem}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.fc{position:relative}
+.flip{width:100%;min-height:98px;padding:12px 44px 12px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;display:flex;flex-direction:column;justify-content:center}
+.fc.flipped .flip{background:var(--accent-soft);border-color:var(--accent)}
+.face{display:none;flex-direction:column;gap:2px;min-width:0;overflow-wrap:anywhere}
+.fc:not(.flipped) .face.a{display:flex}
+.fc.flipped .face.b{display:flex}
+.face .main{font-size:1rem;line-height:1.35}
+.face .main.ko{font-size:1.35rem}
+.know{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.know[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.know svg{width:16px;height:16px}
+
+/* Lecture vocale */
+.voicebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}
+.voicebar .vlab{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#voice-note{margin-top:10px}
+.spk{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;width:30px;height:30px;padding:0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--accent);cursor:pointer;vertical-align:middle;font-size:.88rem;font-weight:500;line-height:1}
+.spk svg{width:16px;height:16px}
+.spk:hover{border-color:var(--accent)}
+.spk.lab{width:auto;height:38px;padding:0 12px}
+.spk.inl{margin-left:8px;width:28px;height:28px}
+.spk.speaking{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.kr{display:flex;align-items:center;gap:12px}
+.kr>p{min-width:0}
+.fc .spk,.wd .spk{position:absolute;right:8px}
+.fc .spk{bottom:8px}
+.wd{position:relative;display:flex}
+.wd .word{width:100%;padding-right:44px}
+.wd .spk{top:8px}
+
+/* Quiz */
+.setup{display:flex;flex-direction:column;gap:14px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .lbl{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+select{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;max-width:100%}
+.qcard{display:flex;flex-direction:column;gap:16px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.qtop{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted)}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.qlabel{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.qprompt{font:500 clamp(1.5rem,6.5vw,2.3rem)/1.25 var(--font-ko);overflow-wrap:anywhere}
+.qprompt.fr{font-family:var(--font-display);font-size:clamp(1.3rem,5vw,1.8rem)}
+.opts{display:grid;gap:8px;grid-template-columns:1fr}
+@media (min-width:560px){.opts{grid-template-columns:1fr 1fr}}
+.opt{min-height:50px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer;text-align:left;overflow-wrap:anywhere}
+.opt.ko{font-size:1.2rem}
+.opt:disabled{cursor:default}
+.opt.ok{background:var(--green-soft);border-color:var(--green)}
+.opt.bad{background:var(--red-soft);border-color:var(--red)}
+.fb{min-height:1.6em;font-size:.95rem}
+.fb.ok{color:var(--green)}.fb.bad{color:var(--red)}
+.score{font:700 2.6rem/1 var(--font-display)}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+
+.foot{padding-block:28px 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.foot ul{display:grid;gap:4px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead gutter">
+  <div class="inner">
+    <h1>Cahier de coréen<span>한국어</span></h1>
+    <p>Alphabet, grammaire, niveaux de politesse, vocabulaire et quiz. Tout est expliqué pour un francophone, avec lecture vocale de la prononciation.</p>
+    <div class="voicebar" id="voicebar"><span class="vlab">Lecture vocale</span><div class="seg" role="group" aria-label="Vitesse de lecture"><button type="button" id="rate-slow" aria-pressed="true">Lente</button><button type="button" id="rate-norm" aria-pressed="false">Normale</button></div></div>
+    <p class="note small" id="voice-note" hidden></p>
+  </div>
+</header>
+
+<div class="tabbar">
+  <div class="gutter"><nav class="inner tabs" aria-label="Sections">
+    <a class="tab" href="#hangeul" data-v="hangeul">Hangeul</a>
+    <a class="tab" href="#grammaire" data-v="grammaire">Grammaire</a>
+    <a class="tab" href="#politesse" data-v="politesse">Politesse</a>
+    <a class="tab" href="#vocabulaire" data-v="vocabulaire">Vocabulaire</a>
+    <a class="tab" href="#quiz" data-v="quiz">Quiz</a>
+  </nav></div>
+</div>
+
+<main class="gutter"><div class="inner">
+
+<!-- ============ HANGEUL ============ -->
+<div class="view" id="v-hangeul" hidden>
+  <section class="sec">
+    <p class="eyebrow">Étape 1</p>
+    <h2>L’alphabet coréen en un après-midi</h2>
+    <p class="lead">Le hangeul compte 24 lettres de base : 14 consonnes et 10 voyelles. Elles ne se suivent pas sur une ligne comme en français. Elles s’assemblent en blocs carrés, et chaque bloc est une syllabe.</p>
+    <p class="def"><b>Romanisation</b> : transcription du coréen en lettres latines. Ce cahier utilise le système officiel coréen, sans accents ni apostrophes. Elle aide au début, mais l’objectif est de lire le hangeul directement.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Les 14 consonnes de base</h2>
+    <p class="muted small">Touche une lettre pour voir comment la prononcer.</p>
+    <div id="g-cons"></div>
+    <h3 class="sub">Les 5 consonnes doubles</h3>
+    <p class="muted small">Prononcées plus tendues, la gorge serrée, sans souffle d’air.</p>
+    <div id="g-dbl"></div>
+    <p class="note">Trois familles de sons à ne pas mélanger : ㄱ ㄷ ㅂ ㅈ (douces), ㅋ ㅌ ㅍ ㅊ (avec un souffle d’air, comme si tu tenais une bougie devant la bouche) et ㄲ ㄸ ㅃ ㅆ ㅉ (tendues).</p>
+  </section>
+
+  <section class="sec">
+    <h2>Les 10 voyelles de base</h2>
+    <div id="g-vow"></div>
+    <h3 class="sub">Les voyelles composées</h3>
+    <div id="g-vow2"></div>
+    <p class="note">Les équivalents français sont des approximations. Pour affiner la prononciation, compare avec un locuteur natif dès que tu peux.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Compose une syllabe</h2>
+    <p class="lead">Une syllabe se construit avec une consonne de départ, une voyelle et, parfois, une consonne finale.</p>
+    <p class="def"><b>Batchim (받침)</b> : consonne finale écrite sous le bloc de la syllabe. Elle se prononce sans souffle, la bouche se ferme sur le son. Choisis « aucune » pour une syllabe ouverte.</p>
+    <div class="composer">
+      <div class="comp-out">
+        <div class="cell" id="comp-cell" role="img" aria-label="Syllabe composée">한</div>
+        <div class="comp-info">
+          <p class="comp-eq ko" id="comp-eq"></p>
+          <p class="comp-read">Se lit : <strong id="comp-ro"></strong></p>
+          <p class="rom small" id="comp-hint"></p>
+          <div id="comp-spk"></div>
+        </div>
+      </div>
+      <div class="comp-row"><h3>Consonne de départ</h3><div class="chips" id="chips-l"></div></div>
+      <div class="comp-row"><h3>Voyelle</h3><div class="chips" id="chips-v"></div></div>
+      <div class="comp-row"><h3>Consonne finale (batchim)</h3><div class="chips" id="chips-t"></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Les consonnes finales</h2>
+    <p class="lead">En fin de syllabe, plusieurs consonnes se prononcent de la même façon. Il n’existe que sept sons finaux.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Lettres</th><th>Son</th><th>Exemple</th></tr></thead>
+      <tbody id="finals-body"></tbody>
+    </table></div>
+  </section>
+
+  <section class="sec">
+    <h2>Premiers mots à déchiffrer</h2>
+    <p class="lead">Beaucoup de mots coréens sont des mots empruntés. Lis chaque mot à voix haute, puis touche la case pour vérifier.</p>
+    <div class="words" id="words"></div>
+  </section>
+</div>
+
+<!-- ============ GRAMMAIRE ============ -->
+<div class="view" id="v-grammaire" hidden>
+  <section class="sec">
+    <p class="eyebrow">Étape 2</p>
+    <h2>Ce que le coréen n’a pas</h2>
+    <ul class="facts">
+      <li><b>Pas d’article.</b> Ni « le », ni « un ». 사과 veut dire « pomme », « la pomme » ou « une pomme ».</li>
+      <li><b>Pas de genre grammatical.</b> Aucun accord à retenir.</li>
+      <li><b>Pas de conjugaison par personne.</b> 가요 peut signifier « je vais », « tu vas » ou « il va ». Le sujet est souvent omis quand le contexte est clair.</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>L’ordre des mots : sujet, objet, verbe</h2>
+    <p class="lead">Le verbe se place toujours à la fin de la phrase. De petits mots collés aux noms indiquent leur rôle.</p>
+    <p class="def"><b>Particule</b> : petit mot ajouté après un nom pour dire sa fonction (thème, sujet, objet, lieu). C’est l’équivalent de nos prépositions et de la fonction des mots dans la phrase, mais placé après le nom.</p>
+    <div class="gloss">
+      <div class="g"><span class="ko">저는</span><small>moi (thème)</small></div>
+      <div class="g o"><span class="ko">사과를</span><small>pomme (objet)</small></div>
+      <div class="g v"><span class="ko">먹어요</span><small>mange</small></div>
+    </div>
+    <p>Je mange une pomme. <span class="rom">jeoneun sagwareul meogeoyo</span></p>
+    <div class="gloss">
+      <div class="g"><span class="ko">저는</span><small>moi (thème)</small></div>
+      <div class="g p"><span class="ko">집에서</span><small>à la maison (lieu)</small></div>
+      <div class="g o"><span class="ko">한국어를</span><small>coréen (objet)</small></div>
+      <div class="g v"><span class="ko">공부해요</span><small>étudie</small></div>
+    </div>
+    <p>J’étudie le coréen à la maison. <span class="rom">jeoneun jibeseo hangugeoreul gongbuhaeyo</span></p>
+    <div class="legend"><span><i></i>thème</span><span><i class="p"></i>lieu</span><span><i class="o"></i>objet</span><span><i class="v"></i>verbe</span></div>
+  </section>
+
+  <section class="sec">
+    <h2>Les particules à connaître</h2>
+    <p class="muted small">Certaines changent selon que le nom se termine par une voyelle ou par une consonne.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Rôle</th><th>Après voyelle</th><th>Après consonne</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td>Thème (« quant à… »)</td><td class="ko">는</td><td class="ko">은</td><td><span class="ko">저는 학생이에요.</span><br>Je suis étudiant(e).<br><span class="rom">jeoneun haksaengieyo</span></td></tr>
+        <tr><td>Sujet</td><td class="ko">가</td><td class="ko">이</td><td><span class="ko">비가 와요.</span><br>Il pleut.<br><span class="rom">biga wayo</span></td></tr>
+        <tr><td>Objet</td><td class="ko">를</td><td class="ko">을</td><td><span class="ko">물을 마셔요.</span><br>Je bois de l’eau.<br><span class="rom">mureul masyeoyo</span></td></tr>
+        <tr><td>Lieu, destination, moment</td><td class="ko" colspan="2">에 (ne change pas)</td><td><span class="ko">학교에 가요.</span><br>Je vais à l’école.<br><span class="rom">hakgyoe gayo</span></td></tr>
+        <tr><td>Lieu où se passe l’action</td><td class="ko" colspan="2">에서 (ne change pas)</td><td><span class="ko">집에서 공부해요.</span><br>J’étudie à la maison.<br><span class="rom">jibeseo gongbuhaeyo</span></td></tr>
+        <tr><td>Avec</td><td class="ko">와 · 하고</td><td class="ko">과 · 하고</td><td><span class="ko">친구하고 가요.</span><br>Je vais avec un ami.<br><span class="rom">chinguhago gayo</span></td></tr>
+        <tr><td>Aussi</td><td class="ko" colspan="2">도 (ne change pas)</td><td><span class="ko">저도 학생이에요.</span><br>Moi aussi, je suis étudiant(e).<br><span class="rom">jeodo haksaengieyo</span></td></tr>
+        <tr><td>De (appartenance)</td><td class="ko" colspan="2">의 (souvent omis)</td><td><span class="ko">제 책</span><br>Mon livre.<br><span class="rom">je chaek</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec">
+    <h2>Conjuguer un verbe</h2>
+    <p class="def"><b>Radical</b> : le verbe sans sa terminaison. Dans le dictionnaire, tous les verbes et adjectifs finissent par 다 (la forme dictionnaire). Retire 다, il reste le radical.</p>
+    <ol class="rules">
+      <li><b>Présent poli (해요체).</b> Si la dernière voyelle du radical est <span class="ko">ㅏ</span> ou <span class="ko">ㅗ</span>, ajoute <span class="ko">아요</span>. Pour toute autre voyelle, ajoute <span class="ko">어요</span>. Les verbes en <span class="ko">하다</span> donnent <span class="ko">해요</span>. Les voyelles qui se rencontrent fusionnent : 가 + 아요 donne 가요, 보 + 아요 donne 봐요.</li>
+      <li><b>Passé.</b> Même choix, avec <span class="ko">았어요</span>, <span class="ko">었어요</span> ou <span class="ko">했어요</span>.</li>
+      <li><b>Futur.</b> Radical terminé par une voyelle : <span class="ko">ㄹ 거예요</span> (가 donne 갈 거예요). Radical terminé par une consonne : <span class="ko">을 거예요</span>.</li>
+      <li><b>Formel.</b> Radical terminé par une voyelle : <span class="ko">ㅂ니다</span> (가 donne 갑니다). Radical terminé par une consonne : <span class="ko">습니다</span>.</li>
+      <li><b>Radicaux en ㄹ</b> (살다) : le ㄹ tombe devant ㅂ, ㄴ et ㅅ. 살 + ㅂ니다 donne 삽니다.</li>
+    </ol>
+    <p class="def"><b>Verbe irrégulier</b> : verbe dont la conjugaison s’écarte de la règle générale. Les verbes en ㄹ ci-dessus en sont un exemple.</p>
+    <h3 class="sub">Essaie avec un verbe</h3>
+    <div class="chips" id="verbs"></div>
+    <div id="conj-out" class="conj" aria-live="polite"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Les phrases du quotidien</h2>
+    <div class="fiches">
+      <div class="fiche"><h3>Dire non</h3>
+        <p class="small muted">Place <span class="ko">안</span> devant le verbe pour la négation simple, <span class="ko">못</span> pour dire « ne pas pouvoir ».</p>
+        <div class="ex"><span class="ko">안 가요.</span><span>Je ne vais pas.</span><span class="rom">an gayo</span></div>
+        <div class="ex"><span class="ko">못 가요.</span><span>Je ne peux pas y aller.</span><span class="rom">mot gayo</span></div>
+      </div>
+      <div class="fiche"><h3>Poser une question</h3>
+        <p class="small muted">La phrase ne change pas. Seule l’intonation monte à la fin.</p>
+        <div class="ex"><span class="ko">커피 마셔요?</span><span>Vous buvez du café ?</span><span class="rom">keopi masyeoyo</span></div>
+        <div class="ex"><span class="ko">뭐 해요?</span><span>Que faites-vous ?</span><span class="rom">mwo haeyo</span></div>
+      </div>
+      <div class="fiche"><h3>Être</h3>
+        <p class="small muted">Le verbe « être » se place après le nom : <span class="ko">이에요</span> après une consonne, <span class="ko">예요</span> après une voyelle. La négation est <span class="ko">아니에요</span>.</p>
+        <div class="ex"><span class="ko">저는 학생이에요.</span><span>Je suis étudiant(e).</span><span class="rom">jeoneun haksaengieyo</span></div>
+        <div class="ex"><span class="ko">저는 의사가 아니에요.</span><span>Je ne suis pas médecin.</span><span class="rom">jeoneun uisaga anieyo</span></div>
+      </div>
+      <div class="fiche"><h3>Avoir, exister</h3>
+        <p class="small muted"><span class="ko">있어요</span> signifie « il y a, j’ai ». <span class="ko">없어요</span> signifie « il n’y a pas, je n’ai pas ».</p>
+        <div class="ex"><span class="ko">시간이 있어요.</span><span>J’ai le temps.</span><span class="rom">sigani isseoyo</span></div>
+        <div class="ex"><span class="ko">돈이 없어요.</span><span>Je n’ai pas d’argent.</span><span class="rom">doni eopseoyo</span></div>
+      </div>
+      <div class="fiche"><h3>Vouloir</h3>
+        <p class="small muted">Radical + <span class="ko">고 싶어요</span> exprime l’envie de faire quelque chose.</p>
+        <div class="ex"><span class="ko">커피를 마시고 싶어요.</span><span>Je voudrais boire un café.</span><span class="rom">keopireul masigo sipeoyo</span></div>
+        <div class="ex"><span class="ko">역에 가고 싶어요.</span><span>Je voudrais aller à la gare.</span><span class="rom">yeoge gago sipeoyo</span></div>
+      </div>
+    </div>
+    <h3 class="sub">Les mots interrogatifs</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Coréen</th><th>Romanisation</th><th>Français</th></tr></thead>
+      <tbody>
+        <tr><td class="ko">뭐</td><td class="rom">mwo</td><td>quoi</td></tr>
+        <tr><td class="ko">누구</td><td class="rom">nugu</td><td>qui</td></tr>
+        <tr><td class="ko">어디</td><td class="rom">eodi</td><td>où</td></tr>
+        <tr><td class="ko">언제</td><td class="rom">eonje</td><td>quand</td></tr>
+        <tr><td class="ko">왜</td><td class="rom">wae</td><td>pourquoi</td></tr>
+        <tr><td class="ko">어떻게</td><td class="rom">eotteoke</td><td>comment</td></tr>
+        <tr><td class="ko">얼마</td><td class="rom">eolma</td><td>combien (prix, quantité)</td></tr>
+        <tr><td class="ko">몇</td><td class="rom">myeot</td><td>combien (nombre à compter)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
+<!-- ============ POLITESSE ============ -->
+<div class="view" id="v-politesse" hidden>
+  <section class="sec">
+    <p class="eyebrow">Étape 3</p>
+    <h2>Trois niveaux de politesse</h2>
+    <p class="lead">En coréen, la terminaison du verbe change selon la personne à qui tu parles. C’est la différence principale avec le français, où l’on choisit surtout entre « tu » et « vous ».</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Niveau</th><th>Quand</th><th>« Manger »</th><th>« Bonjour »</th></tr></thead>
+      <tbody>
+        <tr><td><b>Familier</b><br><span class="ko">반말</span> <span class="rom">banmal</span></td><td>Amis proches, plus jeunes, enfants, avec leur accord.</td><td class="ko">먹어</td><td class="ko">안녕</td></tr>
+        <tr><td><b>Poli courant</b><br><span class="ko">해요체</span> <span class="rom">haeyoche</span></td><td>Tous les jours : inconnus, commerçants, collègues. C’est le niveau par défaut.</td><td class="ko">먹어요</td><td class="ko">안녕하세요</td></tr>
+        <tr><td><b>Formel</b><br><span class="ko">합쇼체</span> <span class="rom">hapsyoche</span></td><td>Présentations, annonces, journal télévisé, service client.</td><td class="ko">먹습니다</td><td class="ko">안녕하십니까</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">En cas de doute, utilise le poli courant. Un coréen ne t’en voudra pas d’être trop poli. Passer au familier se fait quand l’autre le propose.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Quel niveau choisir ?</h2>
+    <p class="muted small">Choisis la personne à qui tu parles. La phrase d’exemple est « Tu as mangé ? ».</p>
+    <div class="chips" id="scen-chips"></div>
+    <div class="scen" id="scen-out" aria-live="polite"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Honorer quelqu’un</h2>
+    <p class="def"><b>Forme honorifique</b> : forme du verbe qui montre du respect envers la personne dont on parle ou à qui l’on s’adresse. On insère <b>-시-</b> (ou <b>-으시-</b>) après le radical, et quelques verbes ont un mot à part.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Verbe</th><th>Forme honorifique poli</th><th>Sens</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ko">가요</span> <span class="rom">gayo</span></td><td><span class="ko">가세요</span> <span class="rom">gaseyo</span></td><td>aller</td></tr>
+        <tr><td><span class="ko">먹어요</span> <span class="rom">meogeoyo</span></td><td><span class="ko">드세요</span> <span class="rom">deuseyo</span></td><td>manger</td></tr>
+        <tr><td><span class="ko">있어요</span> <span class="rom">isseoyo</span></td><td><span class="ko">계세요</span> <span class="rom">gyeseyo</span></td><td>être là, se trouver</td></tr>
+        <tr><td><span class="ko">자요</span> <span class="rom">jayo</span></td><td><span class="ko">주무세요</span> <span class="rom">jumuseyo</span></td><td>dormir</td></tr>
+        <tr><td><span class="ko">말해요</span> <span class="rom">malhaeyo</span></td><td><span class="ko">말씀하세요</span> <span class="rom">malsseumhaseyo</span></td><td>parler</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Le mot <span class="ko">안녕하세요</span> (« bonjour ») est lui-même une forme honorifique : 안녕하다 + 시 + 어요. Le suffixe <span class="ko">님</span> (<span class="rom">nim</span>) s’ajoute aux titres, comme dans <span class="ko">선생님</span> (<span class="rom">seonsaengnim</span>), « professeur » ou « madame, monsieur ».</p>
+  </section>
+</div>
+
+<!-- ============ VOCABULAIRE ============ -->
+<div class="view" id="v-vocabulaire" hidden>
+  <section class="sec">
+    <p class="eyebrow">Étape 4</p>
+    <h2>Vocabulaire par thèmes</h2>
+    <p class="muted small">Touche une carte pour la retourner. Coche-la quand tu la connais : ta progression reste sur cet appareil.</p>
+    <div class="themes" id="themes"></div>
+    <p class="lead" id="theme-intro"></p>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Face visible"><button type="button" id="face-fr" aria-pressed="true">Français d’abord</button><button type="button" id="face-ko" aria-pressed="false">Coréen d’abord</button></div>
+      <button type="button" class="btn" id="shuffle">Mélanger</button>
+      <button type="button" class="btn" id="flipall">Tout retourner</button>
+    </div>
+    <div class="deck" id="deck"></div>
+  </section>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="view" id="v-quiz" hidden>
+  <section class="sec">
+    <p class="eyebrow">Étape 5</p>
+    <h2>Quiz</h2>
+    <div id="quiz-box"></div>
+  </section>
+</div>
+
+</div></main>
+
+<footer class="foot gutter"><div class="inner">
+  <p>Contenu rédigé pour ce cahier, niveau débutant. Pour aller plus loin :</p>
+  <ul>
+    <li><a href="https://cours-et-fiches.com/langues/coreen/" target="_blank" rel="noopener">cours-et-fiches.com</a> : fiches de vocabulaire par thème, en français</li>
+    <li><a href="https://cours-et-fiches.com/langues/coreen/alphabet-coreen-hangeul/" target="_blank" rel="noopener">Guide complet du hangeul</a> sur cours-et-fiches.com</li>
+    <li><a href="https://cours-et-fiches.com/?p=2810" target="_blank" rel="noopener">50 verbes à connaître</a> sur cours-et-fiches.com</li>
+    <li><a href="https://www.howtostudykorean.com/" target="_blank" rel="noopener">How to Study Korean</a> : grammaire détaillée, gratuite, en anglais</li>
+    <li><a href="https://www.sejonghakdang.org/" target="_blank" rel="noopener">King Sejong Institute</a> : cours en ligne officiels</li>
+  </ul>
+</div></footer>
+
+<script>
+(function(){
+'use strict';
+
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---------- Stockage (confort par visiteur) ---------- */
+var KEY='cahier-coreen-v1';
+var store={known:{},best:{}};
+try{
+  var raw=localStorage.getItem(KEY);
+  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){store.known=p.known||{};store.best=p.best||{};if(p.rate==='norm')store.rate='norm';}}
+}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+
+/* ---------- Lecture vocale (synthèse du navigateur) ---------- */
+var SPK_ICON='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.2h2.3L8 3.5v9L4.8 9.8H2.5z"/><path d="M10.6 5.6a3.4 3.4 0 0 1 0 4.8"/><path d="M12.4 3.8a6 6 0 0 1 0 8.4"/></svg>';
+var TTS={ok:('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window),voice:null,btn:null,id:0,late:false};
+function ttsRate(){return store.rate==='norm'?1:0.8;}
+function pickVoice(){
+  if(!TTS.ok)return;
+  var vs=[];try{vs=window.speechSynthesis.getVoices()||[];}catch(e){}
+  var ko=vs.filter(function(v){return /^ko([-_]|$)/i.test(v.lang);});
+  var loc=ko.filter(function(v){return v.localService;});
+  TTS.voice=loc[0]||ko[0]||null;
+  paintVoiceNote();
+}
+function paintVoiceNote(){
+  var n=$('#voice-note');if(!n)return;
+  if(!TTS.ok){n.hidden=false;n.textContent='Ce navigateur ne propose pas la synthèse vocale : les boutons d’écoute ne sont pas disponibles.';return;}
+  if(TTS.voice||!TTS.late){n.hidden=true;return;}
+  n.hidden=false;
+  n.textContent='Aucune voix coréenne détectée sur cet appareil : la prononciation risque d’être fausse ou muette. Sur Mac : Réglages Système, Accessibilité, Contenu énoncé, Voix du système, Gérer les voix, puis ajoute le coréen (Yuna).';
+}
+function paintRate(){
+  $('#rate-slow').setAttribute('aria-pressed',String(store.rate!=='norm'));
+  $('#rate-norm').setAttribute('aria-pressed',String(store.rate==='norm'));
+}
+function initVoice(){
+  if(!TTS.ok){$('#voicebar').hidden=true;paintVoiceNote();return;}
+  $('#rate-slow').addEventListener('click',function(){store.rate='slow';save();paintRate();});
+  $('#rate-norm').addEventListener('click',function(){store.rate='norm';save();paintRate();});
+  paintRate();
+  try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+  pickVoice();
+  setTimeout(function(){TTS.late=true;paintVoiceNote();},1500);
+}
+function speak(text,btn){
+  if(!TTS.ok)return;
+  var t=String(text).replace(/[·~]/g,',').replace(/\s+/g,' ').trim();
+  if(!t)return;
+  try{
+    window.speechSynthesis.cancel();
+    if(TTS.btn)TTS.btn.classList.remove('speaking');
+    var id=++TTS.id;
+    var u=new SpeechSynthesisUtterance(t);
+    u.lang='ko-KR';u.rate=ttsRate();
+    if(TTS.voice)u.voice=TTS.voice;
+    var done=function(){if(id!==TTS.id)return;if(btn)btn.classList.remove('speaking');TTS.btn=null;};
+    u.onend=done;u.onerror=done;
+    if(btn){btn.classList.add('speaking');TTS.btn=btn;}
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function mkSpk(text,label,cls,caption){
+  if(!TTS.ok)return null;
+  var b=el('button','spk'+(cls?' '+cls:''));b.type='button';
+  b.innerHTML=SPK_ICON;
+  if(caption){b.classList.add('lab');b.appendChild(el('span',null,caption));}
+  b.setAttribute('aria-label',label||'Écouter');b.title=label||'Écouter';
+  b.addEventListener('click',function(ev){ev.stopPropagation();speak(text,b);});
+  return b;
+}
+function addSpk(parent,text,label,cls,caption){
+  var b=mkSpk(text,label,cls,caption);if(b)parent.appendChild(b);return b;
+}
+/* Boutons d’écoute sur le contenu statique (phrases, tableaux) */
+function decorate(){
+  if(!TTS.ok)return;
+  $$('.ex > .ko, .tbl-wrap td > span.ko').forEach(function(sp){
+    if(sp.closest('#finals-body'))return;
+    var t=sp.textContent;addSpk(sp,t,'Écouter '+t,'inl');
+  });
+  $$('.tbl-wrap td.ko').forEach(function(td){
+    if(td.closest('#finals-body'))return;
+    var t=td.textContent.trim();
+    if(/^[가-힯\s·.?!]+$/.test(t))addSpk(td,t,'Écouter '+t,'inl');
+  });
+}
+
+/* ---------- Données : alphabet ---------- */
+/* [lettre, romanisation, son en français, mot, romanisation du mot, sens] */
+var CONS=[
+ ['ㄱ','g · k','entre « g » et « k », sans souffle','가수','gasu','chanteur(se)'],
+ ['ㄴ','n','comme le « n » français','나라','nara','pays'],
+ ['ㄷ','d · t','entre « d » et « t », sans souffle','다리','dari','jambe, pont'],
+ ['ㄹ','r · l','« r » très léger entre deux voyelles, « l » en fin de syllabe','라면','ramyeon','ramen'],
+ ['ㅁ','m','comme le « m » français','마음','maeum','cœur, esprit'],
+ ['ㅂ','b · p','entre « b » et « p », sans souffle','바다','bada','mer'],
+ ['ㅅ','s','comme « s » (proche de « ch » devant ㅣ)','사람','saram','personne'],
+ ['ㅇ','– · ng','muet en début de syllabe, « ng » de « camping » en fin','아이','ai','enfant'],
+ ['ㅈ','j','entre « dj » et « tch », sans souffle','자리','jari','place, siège'],
+ ['ㅊ','ch','« tch » avec un souffle d’air','친구','chingu','ami(e)'],
+ ['ㅋ','k','« k » avec un souffle d’air','커피','keopi','café'],
+ ['ㅌ','t','« t » avec un souffle d’air','택시','taeksi','taxi'],
+ ['ㅍ','p','« p » avec un souffle d’air','파리','pari','Paris'],
+ ['ㅎ','h','« h » soufflé','하늘','haneul','ciel']
+];
+var DBL=[
+ ['ㄲ','kk','« k » tendu, gorge serrée, sans souffle','까치','kkachi','pie'],
+ ['ㄸ','tt','« t » tendu','딸','ttal','fille'],
+ ['ㅃ','pp','« p » tendu','빵','ppang','pain'],
+ ['ㅆ','ss','« s » tendu et appuyé','싸다','ssada','être bon marché'],
+ ['ㅉ','jj','« tch » tendu','짜다','jjada','être salé']
+];
+var VOW=[
+ ['ㅏ','a','« a » de « papa »','아기','agi','bébé'],
+ ['ㅑ','ya','« ya » de « yaourt »','야구','yagu','base-ball'],
+ ['ㅓ','eo','« o » ouvert, comme dans « sort »','어머니','eomeoni','mère'],
+ ['ㅕ','yeo','« yo » ouvert','여자','yeoja','femme'],
+ ['ㅗ','o','« o » fermé, comme dans « eau »','오리','ori','canard'],
+ ['ㅛ','yo','« yo » de « yoyo »','요리','yori','cuisine (l’art de cuisiner)'],
+ ['ㅜ','u','« ou » de « loup »','우유','uyu','lait'],
+ ['ㅠ','yu','« you » de « youpi »','유리','yuri','verre'],
+ ['ㅡ','eu','« ou » dit les lèvres étirées, sans les arrondir','그림','geurim','dessin'],
+ ['ㅣ','i','« i » de « midi »','이름','ireum','nom']
+];
+var VOW2=[
+ ['ㅐ','ae','« è » de « mère »','개','gae','chien'],
+ ['ㅒ','yae','« yè »','얘기','yaegi','conversation, histoire'],
+ ['ㅔ','e','« é » ou « è », presque identique à ㅐ','게','ge','crabe'],
+ ['ㅖ','ye','« yé »','시계','sigye','montre, horloge'],
+ ['ㅘ','wa','« oua »','사과','sagwa','pomme'],
+ ['ㅙ','wae','« ouè »','왜','wae','pourquoi'],
+ ['ㅚ','oe','« oué »','회사','hoesa','entreprise'],
+ ['ㅝ','wo','« ou » suivi de ㅓ','뭐','mwo','quoi'],
+ ['ㅞ','we','« oué »','웨이터','weiteo','serveur'],
+ ['ㅟ','wi','« oui »','귀','gwi','oreille'],
+ ['ㅢ','ui','ㅡ puis ㅣ enchaînés','의사','uisa','médecin']
+];
+var FINALS=[
+ ['ㄱ · ㅋ · ㄲ','k','부엌','bueok','cuisine (la pièce)'],
+ ['ㄴ','n','산','san','montagne'],
+ ['ㄷ · ㅅ · ㅆ · ㅈ · ㅊ · ㅌ · ㅎ','t','옷','ot','vêtement'],
+ ['ㄹ','l','물','mul','eau'],
+ ['ㅁ','m','밤','bam','nuit'],
+ ['ㅂ · ㅍ','p','집','jip','maison'],
+ ['ㅇ','ng','강','gang','fleuve']
+];
+var LOAN=[
+ ['아이스크림','aiseukeurim','glace'],['커피','keopi','café'],['택시','taeksi','taxi'],['호텔','hotel','hôtel'],
+ ['버스','beoseu','bus'],['피자','pija','pizza'],['초콜릿','chokollit','chocolat'],['바나나','banana','banane'],
+ ['라디오','radio','radio'],['컴퓨터','keompyuteo','ordinateur'],['텔레비전','tellebijeon','télévision'],['토마토','tomato','tomate'],
+ ['카메라','kamera','appareil photo'],['프랑스','peurangseu','France'],['파리','pari','Paris'],['샌드위치','saendeuwichi','sandwich']
+];
+
+/* ---------- Composition d’une syllabe (Unicode) ---------- */
+var L=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+var LR=['g','kk','n','d','tt','r','m','b','pp','s','ss','','j','jj','ch','k','t','p','h'];
+var V=['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+var VR=['a','ae','ya','yae','eo','e','yeo','ye','o','wa','wae','oe','yo','u','wo','we','wi','yu','eu','ui','i'];
+var T=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+var TS={'ㄱ':'k','ㄴ':'n','ㄷ':'t','ㄹ':'l','ㅁ':'m','ㅂ':'p','ㅇ':'ng'};
+var T_SHOWN=[0,1,4,7,8,16,17,21];
+function compose(li,vi,ti){return String.fromCharCode(0xAC00+(li*21+vi)*28+ti);}
+function roman(li,vi,ti){return LR[li]+VR[vi]+(TS[T[ti]]||'');}
+
+/* ---------- Alphabet : grilles de lettres ---------- */
+function showDetail(det,d){
+  det.textContent='';
+  det.appendChild(el('div','cell sm ko',d[0]));
+  var box=el('div');
+  var p1=el('p');p1.appendChild(el('b',null,'Romanisation : '));p1.appendChild(document.createTextNode(d[1]));
+  var p2=el('p');p2.appendChild(el('b',null,'En français : '));p2.appendChild(document.createTextNode(d[2]));
+  var p3=el('p');p3.appendChild(el('b',null,'Exemple : '));
+  p3.appendChild(el('span','ko',d[3]));
+  p3.appendChild(document.createTextNode(' '));
+  p3.appendChild(el('span','rom','('+d[4]+')'));
+  p3.appendChild(document.createTextNode(' '+d[5]));
+  box.appendChild(p1);box.appendChild(p2);box.appendChild(p3);
+  var acts=el('div','acts');
+  var li=L.indexOf(d[0]),vi=V.indexOf(d[0]);
+  var snd=li>=0?(li===11?compose(11,0,21):compose(li,0,0)):(vi>=0?compose(11,vi,0):null);
+  if(snd)addSpk(acts,snd,'Écouter le son de '+d[0],'','Son · '+snd);
+  addSpk(acts,d[3],'Écouter le mot '+d[3],'','Mot · '+d[3]);
+  if(li>=0&&TTS.ok)acts.appendChild(el('span','muted small','Une consonne se lit dans une syllabe avec ㅏ.'));
+  box.appendChild(acts);
+  det.appendChild(box);
+}
+function renderLetters(id,data){
+  var box=$('#'+id);var grid=el('div','grid-letters');var det=el('div','detail');
+  det.setAttribute('aria-live','polite');
+  data.forEach(function(d){
+    var b=el('button','letter');b.type='button';b.setAttribute('aria-pressed','false');
+    b.appendChild(el('span','jm',d[0]));b.appendChild(el('span','rm',d[1]));
+    b.addEventListener('click',function(){
+      $$('.letter',grid).forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');showDetail(det,d);
+    });
+    grid.appendChild(b);
+  });
+  box.appendChild(grid);box.appendChild(det);
+  grid.firstChild.click();
+}
+
+/* ---------- Alphabet : composeur ---------- */
+var C={li:18,vi:0,ti:4};
+function makeChips(id,items,key,labelFn,cls){
+  var box=$('#'+id);box.textContent='';
+  items.forEach(function(idx){
+    var b=el('button','chip'+(cls?' '+cls:''),labelFn(idx));b.type='button';
+    b.addEventListener('click',function(){C[key]=idx;paintChips();paintComposer();});
+    b.dataset.idx=String(idx);
+    box.appendChild(b);
+  });
+}
+function paintChips(){
+  [['chips-l','li'],['chips-v','vi'],['chips-t','ti']].forEach(function(p){
+    $$('#'+p[0]+' .chip').forEach(function(b){b.setAttribute('aria-pressed',String(Number(b.dataset.idx)===C[p[1]]));});
+  });
+}
+function paintComposer(){
+  var ch=compose(C.li,C.vi,C.ti);
+  $('#comp-cell').textContent=ch;
+  var eq=L[C.li]+' + '+V[C.vi]+(C.ti?' + '+T[C.ti]:'')+' = '+ch;
+  $('#comp-eq').textContent=eq;
+  var r=roman(C.li,C.vi,C.ti);
+  $('#comp-ro').textContent=r||'(vide)';
+  var hint=[];
+  if(!LR[C.li]) hint.push('ㅇ est muet en début de syllabe.');
+  if(C.ti) hint.push('Consonne finale : son « '+(TS[T[C.ti]]||'')+' ».');
+  $('#comp-hint').textContent=hint.join(' ');
+  var sp=$('#comp-spk');sp.textContent='';addSpk(sp,ch,'Écouter la syllabe '+ch,'','Écouter');
+}
+function buildComposer(){
+  var li=[],vi=[];for(var i=0;i<L.length;i++)li.push(i);for(var j=0;j<V.length;j++)vi.push(j);
+  makeChips('chips-l',li,'li',function(i){return L[i];});
+  makeChips('chips-v',vi,'vi',function(i){return V[i];});
+  makeChips('chips-t',T_SHOWN,'ti',function(i){return i===0?'aucune':T[i];},'txt');
+  $$('#chips-t .chip').forEach(function(b){if(b.dataset.idx!=='0')b.classList.remove('txt');});
+  paintChips();paintComposer();
+}
+function buildFinals(){
+  var body=$('#finals-body');
+  FINALS.forEach(function(f){
+    var tr=el('tr');
+    tr.appendChild(el('td','ko',f[0]));
+    tr.appendChild(el('td',null,f[1]));
+    var td=el('td');td.appendChild(el('span','ko',f[2]));td.appendChild(document.createTextNode(' '));
+    td.appendChild(el('span','rom','('+f[3]+') '+f[4]));addSpk(td,f[2],'Écouter '+f[2],'inl');
+    tr.appendChild(td);body.appendChild(tr);
+  });
+}
+function buildWords(){
+  var box=$('#words');
+  LOAN.forEach(function(w){
+    var b=el('button','word');b.type='button';
+    b.appendChild(el('span','w',w[0]));
+    b.appendChild(el('span','r',w[1]+' · '+w[2]));
+    b.addEventListener('click',function(){b.classList.toggle('open');});
+    var wd=el('div','wd');wd.appendChild(b);addSpk(wd,w[0],'Écouter '+w[0]);box.appendChild(wd);
+  });
+}
+
+/* ---------- Grammaire : conjugueur ---------- */
+var VERBS=[
+ {inf:'가다',fr:'aller',note:'가 + 아요 : les deux ㅏ fusionnent, d’où 가요. Le passé se forme avec ㅆ : 갔어요.',f:[['가요','gayo'],['갔어요','gasseoyo'],['갈 거예요','gal geoyeyo'],['갑니다','gamnida']]},
+ {inf:'먹다',fr:'manger',note:'먹 + 어요 : la dernière voyelle ㅓ appelle 어요. Le radical finit par une consonne, d’où 을 거예요 et 습니다.',f:[['먹어요','meogeoyo'],['먹었어요','meogeosseoyo'],['먹을 거예요','meogeul geoyeyo'],['먹습니다','meokseumnida']]},
+ {inf:'하다',fr:'faire',note:'Les verbes en 하다 donnent 해요 au présent et 했어요 au passé.',f:[['해요','haeyo'],['했어요','haesseoyo'],['할 거예요','hal geoyeyo'],['합니다','hamnida']]},
+ {inf:'보다',fr:'voir, regarder',note:'보 + 아요 : ㅗ et ㅏ fusionnent en ㅘ, d’où 봐요.',f:[['봐요','bwayo'],['봤어요','bwasseoyo'],['볼 거예요','bol geoyeyo'],['봅니다','bomnida']]},
+ {inf:'마시다',fr:'boire',note:'마시 + 어요 : ㅣ et ㅓ fusionnent en ㅕ, d’où 마셔요.',f:[['마셔요','masyeoyo'],['마셨어요','masyeosseoyo'],['마실 거예요','masil geoyeyo'],['마십니다','masimnida']]},
+ {inf:'좋다',fr:'être bien, plaire',note:'Un adjectif se conjugue comme un verbe. Dernière voyelle ㅗ, donc 아요.',f:[['좋아요','joayo'],['좋았어요','joasseoyo'],['좋을 거예요','joeul geoyeyo'],['좋습니다','joseumnida']]},
+ {inf:'읽다',fr:'lire',note:'읽 + 어요. Le ㄹ final se prononce devant une voyelle (ilgeoyo) et se tait devant une consonne (ikseumnida).',f:[['읽어요','ilgeoyo'],['읽었어요','ilgeosseoyo'],['읽을 거예요','ilgeul geoyeyo'],['읽습니다','ikseumnida']]},
+ {inf:'오다',fr:'venir',note:'오 + 아요 : ㅗ et ㅏ fusionnent en ㅘ, d’où 와요.',f:[['와요','wayo'],['왔어요','wasseoyo'],['올 거예요','ol geoyeyo'],['옵니다','omnida']]},
+ {inf:'살다',fr:'vivre, habiter',note:'Radical en ㄹ : le ㄹ tombe devant ㅂ, d’où 삽니다. Au futur : 살 거예요.',f:[['살아요','sarayo'],['살았어요','sarasseoyo'],['살 거예요','sal geoyeyo'],['삽니다','samnida']]},
+ {inf:'공부하다',fr:'étudier',note:'Nom + 하다 (« faire de l’étude »). Il se conjugue comme 하다.',f:[['공부해요','gongbuhaeyo'],['공부했어요','gongbuhaesseoyo'],['공부할 거예요','gongbuhal geoyeyo'],['공부합니다','gongbuhamnida']]}
+];
+var TENSES=['Présent poli (해요체)','Passé','Futur','Formel (합쇼체)'];
+function showVerb(i){
+  $$('#verbs .chip').forEach(function(b,k){b.setAttribute('aria-pressed',String(k===i));});
+  var v=VERBS[i];var out=$('#conj-out');out.textContent='';
+  var head=el('div','conj-head');
+  head.appendChild(el('span','ko',v.inf));
+  head.appendChild(el('span','muted',v.fr));
+  head.appendChild(el('span','rom','radical : '+v.inf.slice(0,-1)));addSpk(head,v.inf,'Écouter '+v.inf,'inl');
+  out.appendChild(head);
+  v.f.forEach(function(f,k){
+    var row=el('div','conj-row');
+    row.appendChild(el('span','lab',TENSES[k]));
+    var d=el('div');d.appendChild(el('span','ko',f[0]));d.appendChild(document.createTextNode(' '));d.appendChild(el('span','rom',f[1]));addSpk(d,f[0],'Écouter '+f[0],'inl');
+    row.appendChild(d);out.appendChild(row);
+  });
+  out.appendChild(el('p','note',v.note));
+}
+function buildVerbs(){
+  var box=$('#verbs');
+  VERBS.forEach(function(v,i){
+    var b=el('button','chip',v.inf);b.type='button';b.style.fontSize='1rem';
+    b.addEventListener('click',function(){showVerb(i);});
+    box.appendChild(b);
+  });
+  showVerb(0);
+}
+
+/* ---------- Politesse : scénarios ---------- */
+var SCEN=[
+ {who:'Un ami proche',lvl:'Familier (반말)',ko:'밥 먹었어?',ro:'bap meogeosseo',fr:'Tu as mangé ?',why:'Entre amis du même âge ou plus jeunes, et seulement quand les deux sont d’accord.'},
+ {who:'Un serveur, un vendeur',lvl:'Poli courant (해요체)',ko:'밥 먹었어요?',ro:'bap meogeosseoyo',fr:'Vous avez mangé ?',why:'Le niveau sûr avec quelqu’un que tu ne connais pas.'},
+ {who:'Un collègue',lvl:'Poli courant (해요체)',ko:'점심 먹었어요?',ro:'jeomsim meogeosseoyo',fr:'Vous avez déjeuné ?',why:'Entre collègues de même rang, le poli courant convient.'},
+ {who:'Un supérieur, une personne âgée',lvl:'Poli courant + honorifique',ko:'식사하셨어요?',ro:'siksahasyeosseoyo',fr:'Avez-vous mangé ?',why:'On ajoute -시- au verbe et on choisit le mot de respect pour « repas » (식사).'},
+ {who:'Une annonce, un discours',lvl:'Formel (합쇼체)',ko:'식사하셨습니까?',ro:'siksahasyeotseumnikka',fr:'Avez-vous mangé ?',why:'Style des présentations officielles, des annonces et du service client.'}
+];
+function showScen(i){
+  $$('#scen-chips .chip').forEach(function(b,k){b.setAttribute('aria-pressed',String(k===i));});
+  var s=SCEN[i];var out=$('#scen-out');out.textContent='';
+  out.appendChild(el('span','badge',s.lvl));
+  var kr=el('div','kr');kr.appendChild(el('p','scen-ko',s.ko));addSpk(kr,s.ko,'Écouter '+s.ko);out.appendChild(kr);
+  out.appendChild(el('p','rom',s.ro));
+  out.appendChild(el('p',null,s.fr));
+  out.appendChild(el('p','muted small',s.why));
+}
+function buildScen(){
+  var box=$('#scen-chips');
+  SCEN.forEach(function(s,i){
+    var b=el('button','chip txt',s.who);b.type='button';
+    b.addEventListener('click',function(){showScen(i);});
+    box.appendChild(b);
+  });
+  showScen(1);
+}
+
+/* ---------- Vocabulaire ---------- */
+var THEMES=[
+ {id:'salutations',title:'Salutations',intro:'Les formules de base. 안녕하세요 convient dans presque toutes les situations.',raw:[
+  ['Bonjour','안녕하세요','annyeonghaseyo'],
+  ['Au revoir (à celui qui part)','안녕히 가세요','annyeonghi gaseyo'],
+  ['Au revoir (à celui qui reste)','안녕히 계세요','annyeonghi gyeseyo'],
+  ['Merci','감사합니다','gamsahamnida'],
+  ['Merci (plus détendu)','고마워요','gomawoyo'],
+  ['Pardon, excusez-moi','실례합니다','sillyehamnida'],
+  ['Désolé(e)','죄송합니다','joesonghamnida'],
+  ['Oui','네','ne'],
+  ['Non','아니요','aniyo'],
+  ['De rien, pas du tout','아니에요','anieyo'],
+  ['Ça va, pas de souci','괜찮아요','gwaenchanayo'],
+  ['… s’il vous plaît (en demandant)','주세요','juseyo'],
+  ['Enchanté(e)','만나서 반갑습니다','mannaseo bangapseumnida'],
+  ['Je ne comprends pas, je ne sais pas','모르겠어요','moreugesseoyo'],
+  ['Bon appétit (avant de manger)','잘 먹겠습니다','jal meokgetseumnida'],
+  ['Bonne nuit','안녕히 주무세요','annyeonghi jumuseyo']
+ ]},
+ {id:'presenter',title:'Se présenter',intro:'De quoi te présenter et demander de l’aide. Remplace les noms et les lieux par les tiens.',raw:[
+  ['Comment allez-vous ?','잘 지내세요?','jal jinaeseyo'],
+  ['Quel est votre nom ?','이름이 뭐예요?','ireumi mwoyeyo'],
+  ['Je m’appelle Marie.','제 이름은 마리예요.','je ireumeun mariyeyo'],
+  ['Je suis français(e).','저는 프랑스 사람이에요.','jeoneun peurangseu saramieyo'],
+  ['Je suis développeur.','저는 개발자예요.','jeoneun gaebaljayeyo'],
+  ['J’habite à Paris.','저는 파리에 살아요.','jeoneun parie sarayo'],
+  ['J’apprends le coréen.','한국어를 배워요.','hangugeoreul baewoyo'],
+  ['Je parle un peu coréen.','한국어를 조금 해요.','hangugeoreul jogeum haeyo'],
+  ['Je ne parle pas bien coréen.','한국어를 잘 못해요.','hangugeoreul jal motaeyo'],
+  ['Pouvez-vous répéter ?','다시 말해 주세요.','dasi malhae juseyo'],
+  ['Parlez lentement, s’il vous plaît.','천천히 말해 주세요.','cheoncheonhi malhae juseyo']
+ ]},
+ {id:'nombres',title:'Nombres',intro:'Deux séries. Les nombres sino-coréens servent pour les prix, les dates, les minutes et les numéros de téléphone. Les nombres natifs servent pour l’âge, les heures et le comptage d’objets.',raw:[
+  ['1 (sino-coréen)','일','il'],['2 (sino-coréen)','이','i'],['3 (sino-coréen)','삼','sam'],['4 (sino-coréen)','사','sa'],['5 (sino-coréen)','오','o'],
+  ['6 (sino-coréen)','육','yuk'],['7 (sino-coréen)','칠','chil'],['8 (sino-coréen)','팔','pal'],['9 (sino-coréen)','구','gu'],['10 (sino-coréen)','십','sip'],
+  ['100','백','baek'],['1 000','천','cheon'],['10 000','만','man'],
+  ['1 (natif)','하나','hana'],['2 (natif)','둘','dul'],['3 (natif)','셋','set'],['4 (natif)','넷','net'],['5 (natif)','다섯','daseot'],
+  ['6 (natif)','여섯','yeoseot'],['7 (natif)','일곱','ilgop'],['8 (natif)','여덟','yeodeol'],['9 (natif)','아홉','ahop'],['10 (natif)','열','yeol']
+ ]},
+ {id:'restaurant',title:'Manger et boire',intro:'Au restaurant ou au marché. Pour commander, dis le nom de l’article puis ajoute 주세요.',raw:[
+  ['Eau','물','mul'],['Riz cuit, repas','밥','bap'],['Viande','고기','gogi'],['Poisson','생선','saengseon'],['Légumes','채소','chaeso'],
+  ['Fruit','과일','gwail'],['Pomme','사과','sagwa'],['Café','커피','keopi'],['Thé','차','cha'],['Bière','맥주','maekju'],
+  ['Lait','우유','uyu'],['Pain','빵','ppang'],['Kimchi','김치','gimchi'],['Menu','메뉴','menyu'],
+  ['De l’eau, s’il vous plaît','물 주세요','mul juseyo'],
+  ['L’addition, s’il vous plaît','계산해 주세요','gyesanhae juseyo'],
+  ['C’est délicieux','맛있어요','masisseoyo'],['C’est épicé','매워요','maewoyo'],
+  ['J’ai faim','배고파요','baegopayo'],['J’ai soif','목말라요','mongmallayo']
+ ]},
+ {id:'deplacements',title:'Se déplacer',intro:'Pour trouver ton chemin et poser les questions utiles en voyage.',raw:[
+  ['Où sont les toilettes ?','화장실이 어디예요?','hwajangsiri eodiyeyo'],
+  ['Toilettes','화장실','hwajangsil'],['Gare, station','역','yeok'],['Métro','지하철','jihacheol'],['Bus','버스','beoseu'],
+  ['Taxi','택시','taeksi'],['Aéroport','공항','gonghang'],['Hôtel','호텔','hotel'],
+  ['Combien ça coûte ?','얼마예요?','eolmayeyo'],
+  ['Tout droit','직진','jikjin'],['À gauche','왼쪽','oenjjok'],['À droite','오른쪽','oreunjjok'],
+  ['Ici','여기','yeogi'],['Là-bas','저기','jeogi'],
+  ['Je voudrais aller à la gare.','역에 가고 싶어요.','yeoge gago sipeoyo']
+ ]},
+ {id:'famille',title:'Famille et proches',intro:'Les mots pour « frère aîné » et « sœur aînée » changent selon le sexe de la personne qui parle.',raw:[
+  ['Famille','가족','gajok'],['Père','아버지','abeoji'],['Mère','어머니','eomeoni'],['Papa','아빠','appa'],['Maman','엄마','eomma'],
+  ['Fils','아들','adeul'],['Fille','딸','ttal'],['Enfant','아이','ai'],['Petit frère, petite sœur','동생','dongsaeng'],
+  ['Grand frère (dit par un homme)','형','hyeong'],['Grand frère (dit par une femme)','오빠','oppa'],
+  ['Grande sœur (dite par une femme)','언니','eonni'],['Grande sœur (dite par un homme)','누나','nuna'],
+  ['Mari','남편','nampyeon'],['Épouse','아내','anae'],['Ami(e)','친구','chingu']
+ ]},
+ {id:'temps',title:'Temps et jours',intro:'Les jours de la semaine finissent par 요일 et portent le nom de la lune, du feu, de l’eau, du bois, du métal, de la terre et du soleil.',raw:[
+  ['Aujourd’hui','오늘','oneul'],['Demain','내일','naeil'],['Hier','어제','eoje'],['Maintenant','지금','jigeum'],
+  ['Matin','아침','achim'],['Soir','저녁','jeonyeok'],['Nuit','밤','bam'],
+  ['Lundi','월요일','woryoil'],['Mardi','화요일','hwayoil'],['Mercredi','수요일','suyoil'],['Jeudi','목요일','mogyoil'],
+  ['Vendredi','금요일','geumyoil'],['Samedi','토요일','toyoil'],['Dimanche','일요일','iryoil'],
+  ['Semaine','주','ju'],['Mois (dans une date)','월','wol'],['Année','년','nyeon'],
+  ['Quelle heure est-il ?','지금 몇 시예요?','jigeum myeot siyeyo']
+ ]},
+ {id:'verbes',title:'Verbes essentiels',intro:'Formes du dictionnaire. Retire 다 pour obtenir le radical, puis conjugue avec la section Grammaire.',raw:[
+  ['Aller','가다','gada'],['Venir','오다','oda'],['Manger','먹다','meokda'],['Boire','마시다','masida'],['Voir, regarder','보다','boda'],
+  ['Faire','하다','hada'],['Avoir, il y a','있다','itda'],['Ne pas avoir, il n’y a pas','없다','eopda'],['Aimer','좋아하다','joahada'],
+  ['Savoir, connaître','알다','alda'],['Ne pas savoir','모르다','moreuda'],['Donner','주다','juda'],['Acheter','사다','sada'],
+  ['Lire','읽다','ikda'],['Écrire','쓰다','sseuda'],['Parler','말하다','malhada'],['Étudier','공부하다','gongbuhada'],
+  ['Travailler','일하다','ilhada'],['Vivre, habiter','살다','salda'],['Dormir','자다','jada'],['Rencontrer','만나다','mannada'],
+  ['Apprendre','배우다','baeuda'],['Écouter','듣다','deutda']
+ ]},
+ {id:'adjectifs',title:'Adjectifs',intro:'Les adjectifs se conjuguent comme des verbes : 좋다 devient 좋아요 (« c’est bien »).',raw:[
+  ['Grand','크다','keuda'],['Petit','작다','jakda'],['Beaucoup, nombreux','많다','manta'],['Peu','적다','jeokda'],
+  ['Bon, bien','좋다','jota'],['Mauvais','나쁘다','nappeuda'],['Joli','예쁘다','yeppeuda'],['Délicieux','맛있다','masitda'],
+  ['Difficile','어렵다','eoryeopda'],['Facile','쉽다','swipda'],['Cher','비싸다','bissada'],['Bon marché','싸다','ssada'],
+  ['Chaud (météo)','덥다','deopda'],['Froid (météo)','춥다','chupda'],['Occupé','바쁘다','bappeuda'],
+  ['Amusant, intéressant','재미있다','jaemiitda'],['Fatigué','피곤하다','pigonhada']
+ ]}
+];
+var ALL=[];
+THEMES.forEach(function(t){
+  t.items=t.raw.map(function(r,i){return {id:t.id+'-'+i,fr:r[0],ko:r[1],ro:r[2],theme:t.id};});
+  t.items.forEach(function(x){ALL.push(x);});
+});
+
+var VS={theme:THEMES[0].id,face:'fr',order:null};
+var CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+function themeById(id){for(var i=0;i<THEMES.length;i++)if(THEMES[i].id===id)return THEMES[i];return THEMES[0];}
+function knownCount(t){var n=0;t.items.forEach(function(x){if(store.known[x.id])n++;});return n;}
+function renderThemes(){
+  var box=$('#themes');box.textContent='';
+  THEMES.forEach(function(t){
+    var b=el('button','theme');b.type='button';b.setAttribute('aria-pressed',String(t.id===VS.theme));
+    b.appendChild(document.createTextNode(t.title));
+    b.appendChild(el('em',null,knownCount(t)+'/'+t.items.length));
+    b.addEventListener('click',function(){VS.theme=t.id;VS.order=null;renderThemes();renderDeck();});
+    box.appendChild(b);
+  });
+}
+function renderDeck(){
+  var t=themeById(VS.theme);
+  $('#theme-intro').textContent=t.intro;
+  var deck=$('#deck');deck.textContent='';
+  var list=VS.order||t.items;
+  list.forEach(function(x){
+    var fc=el('div','fc');
+    var flip=el('button','flip');flip.type='button';
+    var a=el('div','face a');var b=el('div','face b');
+    function fill(face,side){
+      if(side==='fr'){face.appendChild(el('span','main',x.fr));}
+      else{face.appendChild(el('span','main ko',x.ko));}
+    }
+    if(VS.face==='fr'){
+      fill(a,'fr');fill(b,'ko');b.appendChild(el('span','rom',x.ro));
+    }else{
+      fill(a,'ko');fill(b,'fr');b.appendChild(el('span','rom',x.ro));
+    }
+    flip.appendChild(a);flip.appendChild(b);
+    flip.addEventListener('click',function(){fc.classList.toggle('flipped');});
+    var k=el('button','know');k.type='button';k.innerHTML=CHECK;
+    k.setAttribute('aria-label','Marquer « '+x.fr+' » comme connu');
+    k.setAttribute('aria-pressed',String(!!store.known[x.id]));
+    k.addEventListener('click',function(){
+      if(store.known[x.id]){delete store.known[x.id];}else{store.known[x.id]=1;}
+      k.setAttribute('aria-pressed',String(!!store.known[x.id]));save();renderThemes();
+    });
+    fc.appendChild(flip);fc.appendChild(k);addSpk(fc,x.ko,'Écouter '+x.ko);deck.appendChild(fc);
+  });
+}
+function setFace(f){
+  VS.face=f;
+  $('#face-fr').setAttribute('aria-pressed',String(f==='fr'));
+  $('#face-ko').setAttribute('aria-pressed',String(f==='ko'));
+  renderDeck();
+}
+function buildVocab(){
+  renderThemes();renderDeck();
+  $('#face-fr').addEventListener('click',function(){setFace('fr');});
+  $('#face-ko').addEventListener('click',function(){setFace('ko');});
+  $('#shuffle').addEventListener('click',function(){VS.order=shuffle(themeById(VS.theme).items);renderDeck();});
+  $('#flipall').addEventListener('click',function(){
+    var cards=$$('#deck .fc');
+    var allFlipped=cards.every(function(c){return c.classList.contains('flipped');});
+    cards.forEach(function(c){c.classList.toggle('flipped',!allFlipped);});
+  });
+}
+
+/* ---------- Quiz ---------- */
+var READ=[];
+(function(){
+  var li=[0,2,3,5,6,7,9,11,12,14,15,16,17,18];
+  var vi=[0,2,4,6,8,12,13,17,18,20];
+  li.forEach(function(a){vi.forEach(function(b){READ.push({ko:compose(a,b,0),ro:roman(a,b,0)});});});
+})();
+var Q={mode:'ko-fr',theme:'all',list:[],i:0,score:0,wrong:[],locked:false};
+var MODES=[['ko-fr','Coréen vers français'],['fr-ko','Français vers coréen'],['read','Lire le hangeul']];
+
+function poolFor(){
+  if(Q.mode==='read')return READ;
+  if(Q.theme==='all')return ALL;
+  return ALL.filter(function(x){return x.theme===Q.theme;});
+}
+function keyFor(){return Q.mode==='fr-ko'?'ko':(Q.mode==='ko-fr'?'fr':'ro');}
+function buildQuestion(item,pool){
+  var key=keyFor();var correct=item[key];var opts=[correct];
+  function take(src){
+    var c=shuffle(src);
+    for(var i=0;i<c.length&&opts.length<4;i++){if(opts.indexOf(c[i][key])<0)opts.push(c[i][key]);}
+  }
+  take(pool);
+  if(opts.length<4)take(Q.mode==='read'?READ:ALL);
+  return {item:item,correct:correct,options:shuffle(opts)};
+}
+function bestKey(){return Q.mode+':'+(Q.mode==='read'?'-':Q.theme);}
+
+function renderSetup(){
+  var box=$('#quiz-box');box.textContent='';
+  var s=el('div','setup');
+  var f1=el('div','field');f1.appendChild(el('span','lbl','Type d’exercice'));
+  var chips=el('div','chips');
+  MODES.forEach(function(m){
+    var b=el('button','chip txt',m[1]);b.type='button';b.setAttribute('aria-pressed',String(Q.mode===m[0]));
+    b.addEventListener('click',function(){Q.mode=m[0];renderSetup();});
+    chips.appendChild(b);
+  });
+  f1.appendChild(chips);s.appendChild(f1);
+  if(Q.mode!=='read'){
+    var f2=el('div','field');var lab=el('label',null,'Thème');lab.setAttribute('for','quiz-theme');
+    var sel=el('select');sel.id='quiz-theme';
+    var o0=el('option',null,'Tous les thèmes');o0.value='all';sel.appendChild(o0);
+    THEMES.forEach(function(t){var o=el('option',null,t.title);o.value=t.id;sel.appendChild(o);});
+    sel.value=Q.theme;
+    sel.addEventListener('change',function(){Q.theme=sel.value;renderSetup();});
+    f2.appendChild(lab);f2.appendChild(sel);s.appendChild(f2);
+  }else{
+    s.appendChild(el('p','muted small','Dix syllabes tirées au hasard parmi les 14 consonnes et les 10 voyelles de base. Réponds avec la romanisation.'));
+  }
+  var best=store.best[bestKey()];
+  if(best!=null)s.appendChild(el('p','muted small','Meilleur score : '+best+' / 10'));
+  var go=el('button','btn primary','Commencer (10 questions)');go.type='button';
+  go.addEventListener('click',function(){startQuiz();});
+  s.appendChild(go);box.appendChild(s);
+}
+function startQuiz(items){
+  var pool=poolFor();
+  var picked=items||shuffle(pool).slice(0,10);
+  Q.list=picked.map(function(it){return buildQuestion(it,pool);});
+  Q.i=0;Q.score=0;Q.wrong=[];Q.locked=false;
+  renderQuestion();
+}
+function renderQuestion(){
+  var box=$('#quiz-box');box.textContent='';
+  var q=Q.list[Q.i];var card=el('div','qcard');
+  var top=el('div','qtop');top.appendChild(el('span',null,'Question '+(Q.i+1)+' / '+Q.list.length));top.appendChild(el('span',null,'Score : '+Q.score));
+  card.appendChild(top);
+  var bar=el('div','bar');var fill=el('i');fill.style.width=(Q.i/Q.list.length*100)+'%';bar.appendChild(fill);card.appendChild(bar);
+  var label=Q.mode==='ko-fr'?'Que signifie ce mot ?':(Q.mode==='fr-ko'?'Comment dit-on en coréen ?':'Comment se lit cette syllabe ?');
+  card.appendChild(el('p','qlabel',label));
+  var prompt=Q.mode==='fr-ko'?q.item.fr:q.item.ko;
+  var pr=el('div','kr');pr.appendChild(el('p','qprompt'+(Q.mode==='fr-ko'?' fr':''),prompt));
+  if(Q.mode!=='fr-ko')addSpk(pr,q.item.ko,'Écouter '+q.item.ko);
+  card.appendChild(pr);
+  var opts=el('div','opts');
+  var fb=el('p','fb');fb.setAttribute('aria-live','polite');
+  var next=el('button','btn primary',Q.i+1===Q.list.length?'Voir le score':'Question suivante');next.type='button';next.hidden=true;
+  q.options.forEach(function(text){
+    var b=el('button','opt'+(Q.mode==='ko-fr'||Q.mode==='read'?'':' ko'),text);b.type='button';
+    b.addEventListener('click',function(){
+      if(Q.locked)return;Q.locked=true;
+      var ok=text===q.correct;
+      $$('.opt',opts).forEach(function(o){
+        o.disabled=true;
+        if(o.textContent===q.correct)o.classList.add('ok');
+      });
+      if(ok){Q.score++;fb.className='fb ok';fb.textContent='Bonne réponse. '+detail(q.item);}
+      else{b.classList.add('bad');Q.wrong.push(q.item);fb.className='fb bad';fb.textContent='Raté. La réponse était « '+q.correct+' ». '+detail(q.item);}
+      top.lastChild.textContent='Score : '+Q.score;
+      if(Q.mode==='fr-ko')addSpk(fb,q.item.ko,'Écouter '+q.item.ko,'inl');
+      next.hidden=false;next.focus();
+    });
+    opts.appendChild(b);
+  });
+  card.appendChild(opts);card.appendChild(fb);card.appendChild(next);
+  next.addEventListener('click',function(){
+    Q.locked=false;Q.i++;
+    if(Q.i>=Q.list.length)renderResult();else renderQuestion();
+  });
+  box.appendChild(card);
+}
+function detail(it){
+  if(Q.mode==='read')return it.ko+' se lit « '+it.ro+' ».';
+  return it.ko+' ('+it.ro+') : '+it.fr+'.';
+}
+function renderResult(){
+  var box=$('#quiz-box');box.textContent='';
+  var n=Q.list.length;var k=bestKey();
+  var prev=store.best[k];var record=prev==null||Q.score>prev;
+  if(record&&n===10){store.best[k]=Q.score;save();}
+  var card=el('div','qcard');
+  card.appendChild(el('p','qlabel','Résultat'));
+  card.appendChild(el('p','score',Q.score+' / '+n));
+  var msg=Q.score===n?'Sans faute.':(Q.score>=Math.ceil(n*0.7)?'Solide. Quelques points à revoir.':'Continue : la répétition fait le travail.');
+  card.appendChild(el('p',null,msg+(record&&n===10?' Nouveau meilleur score pour cet exercice.':'')));
+  if(Q.wrong.length){
+    card.appendChild(el('p','qlabel','À revoir'));
+    var ul=el('ul');
+    Q.wrong.forEach(function(it){ul.appendChild(el('li',null,detail(it)));});
+    card.appendChild(ul);
+  }
+  var row=el('div','row');
+  var again=el('button','btn primary','Rejouer');again.type='button';again.addEventListener('click',function(){startQuiz();});row.appendChild(again);
+  if(Q.wrong.length){
+    var rev=el('button','btn','Refaire les erreurs');rev.type='button';
+    var wrong=Q.wrong.slice();
+    rev.addEventListener('click',function(){startQuiz(wrong);});row.appendChild(rev);
+  }
+  var chg=el('button','btn','Changer d’exercice');chg.type='button';chg.addEventListener('click',renderSetup);row.appendChild(chg);
+  card.appendChild(row);box.appendChild(card);
+}
+
+/* ---------- Navigation par onglets ---------- */
+var VIEWS=['hangeul','grammaire','politesse','vocabulaire','quiz'];
+function route(scroll){
+  var h=(location.hash||'').replace('#','');
+  if(VIEWS.indexOf(h)<0)h='hangeul';
+  VIEWS.forEach(function(v){$('#v-'+v).hidden=(v!==h);});
+  $$('.tab').forEach(function(a){
+    if(a.dataset.v===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+  });
+  if(scroll)window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',function(){route(true);});
+
+/* ---------- Démarrage ---------- */
+initVoice();
+renderLetters('g-cons',CONS);
+renderLetters('g-dbl',DBL);
+renderLetters('g-vow',VOW);
+renderLetters('g-vow2',VOW2);
+buildComposer();
+buildFinals();
+buildWords();
+buildVerbs();
+buildScen();
+buildVocab();
+renderSetup();
+decorate();
+route(false);
+})();
+</script>
+</body>
+</html>
